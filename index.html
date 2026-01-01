@@ -2,286 +2,264 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>📇 Contact Hub</title>
+<title>Contact Hub</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<!-- Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<!-- QR -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <style>
-body{
-margin:0;
-font-family:Segoe UI, sans-serif;
-background:linear-gradient(135deg,#020b1f,#061d3a);
-color:#fff;
+:root{
+  --blue:#0a1f44;
+  --glow:#00c6ff;
 }
-.hidden{display:none}
-.btn{
-padding:10px 18px;
-border:none;
-border-radius:8px;
-background:#0a84ff;
-color:white;
-cursor:pointer;
-margin:6px;
-}
-.btn:hover{background:#0066cc}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI;}
+body{background:linear-gradient(120deg,#020b2d,#061b45);color:white}
 
-/* LANDING */
-.landing{
-height:100vh;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-text-align:center;
+/* ===== LANDING ===== */
+#landing{
+  height:100vh;display:flex;flex-direction:column;
+  justify-content:center;align-items:center;
+  text-align:center
 }
 .logo{
-font-size:64px;
-font-weight:bold;
-color:#7fd7ff;
-text-shadow:0 0 25px #00aaff;
+  font-size:3.5rem;font-weight:bold;
+  text-shadow:0 0 20px var(--glow);
 }
-.sub{opacity:.8;margin-bottom:20px}
+.btn{
+  margin:10px;padding:15px 40px;
+  border:none;border-radius:30px;
+  background:var(--glow);color:#000;
+  font-weight:bold;cursor:pointer
+}
 
-/* FORMS */
+/* ===== FORMS ===== */
 .form{
-width:350px;
-background:rgba(255,255,255,0.1);
-backdrop-filter:blur(12px);
-padding:25px;
-border-radius:15px;
-box-shadow:0 0 30px #000;
+  display:none;max-width:400px;
+  margin:40px auto;background:#061b45;
+  padding:25px;border-radius:10px;
+  box-shadow:0 0 15px #00c6ff
 }
-.form h2{text-align:center}
 input,select{
-width:100%;
-padding:10px;
-margin:8px 0;
-border-radius:6px;
-border:none;
-outline:none;
+  width:100%;padding:10px;
+  margin:8px 0;border-radius:5px;
+  border:none
 }
 
-/* DASHBOARD */
-.topbar{
-background:#081a33;
-padding:15px;
-display:flex;
-justify-content:space-between;
-align-items:center;
+/* ===== DASHBOARD ===== */
+#dashboard{display:none;padding:20px}
+nav{
+  display:flex;gap:10px;
+  flex-wrap:wrap;margin-bottom:15px
 }
-.sidebar{
-width:230px;
-background:#091f3f;
-position:fixed;
-top:60px;
-bottom:0;
-padding:15px;
+nav button{
+  padding:10px;border:none;
+  border-radius:5px;cursor:pointer
 }
-.sidebar button{width:100%}
-.main{
-margin-left:250px;
-padding:20px;
-}
-
-/* CONTACT CARD */
 .card{
-background:rgba(255,255,255,0.1);
-padding:12px;
-border-radius:12px;
-margin:8px 0;
-display:flex;
-justify-content:space-between;
-align-items:center;
+  background:#061b45;
+  padding:10px;margin:8px 0;
+  border-radius:8px;
+  display:flex;justify-content:space-between;
+  align-items:center
 }
-.actions i{
-margin:0 6px;
-cursor:pointer;
-color:#7fd7ff;
+.icon-btn{background:none;border:none;color:white;font-size:18px;cursor:pointer}
+
+/* ===== PRIVATE PIN ===== */
+#pinBox{
+  display:none;position:fixed;
+  inset:0;background:rgba(0,0,0,.8);
+  display:flex;align-items:center;justify-content:center
 }
-.actions i:hover{color:#fff}
 </style>
 </head>
 
 <body>
 
 <!-- LANDING -->
-<div class="landing" id="landing">
-<div class="logo">📇 Contact Hub</div>
-<div class="sub">Store • Secure • Communicate</div>
-<button class="btn" id="openRegister">✨ Register</button>
-<button class="btn" id="openLogin">🔐 Login</button>
+<div id="landing">
+  <div class="logo">📞 Contact Hub</div>
+  <button class="btn" onclick="show('register')">Register</button>
+  <button class="btn" onclick="show('login')">Login</button>
 </div>
 
 <!-- REGISTER -->
-<div class="landing hidden" id="register">
-<div class="form">
-<h2>✨ Create Profile</h2>
-<input id="rUser" placeholder="Username (≤ 50 chars)">
-<input id="rEmail" type="email" placeholder="Email">
+<div class="form" id="register">
+<h2>Register</h2>
+<input id="rUser" placeholder="Username (max 50 chars)">
+<input id="rEmail" placeholder="Email">
 <input id="rPass" type="password" placeholder="Password (no spaces)">
 <input id="rCPass" type="password" placeholder="Confirm Password">
-<button class="btn" id="registerBtn">Create Account</button>
-</div>
+<button class="btn" onclick="register()">Create Profile</button>
 </div>
 
 <!-- LOGIN -->
-<div class="landing hidden" id="login">
-<div class="form">
-<h2>🔐 Login</h2>
+<div class="form" id="login">
+<h2>Login</h2>
 <input id="lUser" placeholder="Username">
 <input id="lPass" type="password" placeholder="Password">
-<button class="btn" id="loginBtn">Login</button>
-</div>
+<button class="btn" onclick="login()">Login</button>
 </div>
 
 <!-- DASHBOARD -->
-<div id="dash" class="hidden">
-<div class="topbar">
-<h2>📇 Contact Hub</h2>
-<button class="btn" id="logoutBtn">Logout</button>
+<div id="dashboard">
+<nav>
+<button onclick="view='all';render()">All</button>
+<button onclick="view='fav';render()">⭐ Favorites</button>
+<button onclick="view='group';render()">👥 Groups</button>
+<button onclick="view='blocked';render()">🚫 Blocked</button>
+<button onclick="openPrivate()">🔐 Private</button>
+<button onclick="view='emergency';render()">🚑 Emergency</button>
+<button onclick="showAdd()">➕ Add</button>
+<input id="search" placeholder="Search..." oninput="render()">
+<button onclick="voiceSearch()">🎙️</button>
+</nav>
+
+<div id="list"></div>
 </div>
 
-<div class="sidebar">
-<button class="btn" onclick="show('all')">📖 All</button>
-<button class="btn" onclick="show('add')">➕ Add</button>
-<button class="btn" onclick="show('fav')">⭐ Favourites</button>
-<button class="btn" onclick="show('emg')">🚨 Emergency</button>
-</div>
-
-<div class="main">
-<input id="search" placeholder="🔍 Search..." onkeyup="render()">
-
-<div id="add" class="hidden">
-<h3>➕ Add / Edit Contact</h3>
-<input id="name" placeholder="Full Name">
-<input id="phone" placeholder="Phone">
+<!-- ADD CONTACT -->
+<div class="form" id="addForm">
+<h2>Add Contact</h2>
+<input id="fName" placeholder="First Name">
+<input id="sName" placeholder="Surname">
+<input id="number" placeholder="Number">
 <input id="email" placeholder="Email">
+<input type="date" id="dob">
+<select id="blood">
+<option>O+</option><option>O-</option><option>A+</option>
+<option>B+</option><option>AB+</option>
+</select>
 <select id="group">
-<option>Family</option>
-<option>Friends</option>
+<option>Family</option><option>Friends</option>
 <option>Office</option>
 </select>
-<label><input type="checkbox" id="fav"> ⭐ Favourite</label><br>
-<label><input type="checkbox" id="emg"> 🚨 Emergency</label><br>
-<button class="btn" onclick="save()">Save Contact</button>
+<label><input type="checkbox" id="fav"> Favorite</label>
+<label><input type="checkbox" id="block"> Block</label>
+<label><input type="checkbox" id="private"> Private</label>
+<label><input type="checkbox" id="emg"> Emergency</label>
+<button class="btn" onclick="saveContact()">Save</button>
 </div>
 
-<div id="all"></div>
-<div id="fav" class="hidden"></div>
-<div id="emg" class="hidden"></div>
-
+<!-- PRIVATE PIN -->
+<div id="pinBox">
+<div class="form">
+<h3>Enter PIN</h3>
+<input id="pin" type="password">
+<button class="btn" onclick="checkPin()">Open</button>
 </div>
 </div>
 
 <script>
-/* ---------- ELEMENTS ---------- */
-const landing = document.getElementById("landing");
-const registerPage = document.getElementById("register");
-const loginPage = document.getElementById("login");
-const dash = document.getElementById("dash");
+let users=JSON.parse(localStorage.getItem("users")||"{}");
+let current=null;
+let contacts=[];
+let view="all";
 
-/* ---------- BUTTON EVENTS ---------- */
-document.getElementById("openRegister").onclick = () => {
-landing.classList.add("hidden");
-registerPage.classList.remove("hidden");
-};
+/* ===== BASIC NAV ===== */
+function show(id){
+  landing.style.display="none";
+  document.querySelectorAll(".form").forEach(f=>f.style.display="none");
+  document.getElementById(id).style.display="block";
+}
 
-document.getElementById("openLogin").onclick = () => {
-landing.classList.add("hidden");
-loginPage.classList.remove("hidden");
-};
-
-document.getElementById("registerBtn").onclick = register;
-document.getElementById("loginBtn").onclick = login;
-document.getElementById("logoutBtn").onclick = () => location.reload();
-
-/* ---------- DATA ---------- */
-let user="", contacts=[], mode="all", editIndex=null;
-
-/* ---------- AUTH ---------- */
+/* ===== REGISTER ===== */
 function register(){
-if(rUser.value.length>50) return alert("Username too long");
-if(rPass.value.includes(" ")) return alert("Password cannot contain spaces");
-if(rPass.value!==rCPass.value) return alert("Passwords do not match");
-
-localStorage.setItem("user_"+rUser.value, JSON.stringify({
-email:rEmail.value,
-pass:rPass.value
-}));
-alert("Registration successful!");
-registerPage.classList.add("hidden");
-loginPage.classList.remove("hidden");
+  let u=rUser.value;
+  if(u.length>50) return alert("Username too long");
+  if(/\s/.test(rPass.value)) return alert("No spaces in password");
+  if(rPass.value!==rCPass.value) return alert("Password mismatch");
+  users[u]={pass:rPass.value,pin:"1234",contacts:[]};
+  localStorage.setItem("users",JSON.stringify(users));
+  alert("Registered");
+  show("login");
 }
 
+/* ===== LOGIN ===== */
 function login(){
-let data = JSON.parse(localStorage.getItem("user_"+lUser.value));
-if(!data || data.pass !== lPass.value) return alert("Invalid login");
-
-user = lUser.value;
-contacts = JSON.parse(localStorage.getItem("contacts_"+user) || "[]");
-
-loginPage.classList.add("hidden");
-dash.classList.remove("hidden");
-render();
+  let u=lUser.value;
+  if(users[u] && users[u].pass===lPass.value){
+    current=u;
+    contacts=users[u].contacts;
+    login.style.display="none";
+    dashboard.style.display="block";
+    render();
+  } else alert("Invalid login");
 }
 
-/* ---------- CONTACTS ---------- */
-function show(p){mode=p;render()}
-
-function save(){
-let c={
-name:name.value,
-phone:phone.value,
-email:email.value,
-group:group.value,
-fav:fav.checked,
-emg:emg.checked
-};
-if(editIndex!==null){contacts[editIndex]=c;editIndex=null}
-else contacts.push(c);
-
-localStorage.setItem("contacts_"+user, JSON.stringify(contacts));
-alert("Contact saved");
-show("all");
+/* ===== ADD ===== */
+function showAdd(){
+  dashboard.style.display="none";
+  addForm.style.display="block";
+}
+function saveContact(){
+  contacts.push({
+    name:fName.value+" "+sName.value,
+    number:number.value,
+    email:email.value,
+    dob:dob.value,
+    blood:blood.value,
+    group:group.value,
+    fav:fav.checked,
+    block:block.checked,
+    private:private.checked,
+    emg:emg.checked
+  });
+  users[current].contacts=contacts;
+  localStorage.setItem("users",JSON.stringify(users));
+  addForm.style.display="none";
+  dashboard.style.display="block";
+  render();
 }
 
+/* ===== RENDER ===== */
 function render(){
-["all","fav","emg","add"].forEach(i=>document.getElementById(i).classList.add("hidden"));
-document.getElementById(mode).classList.remove("hidden");
-
-let box=document.getElementById(mode);
-if(mode==="add") return;
-
-box.innerHTML="";
-contacts
-.filter(c=>mode==="fav"?c.fav:mode==="emg"?c.emg:true)
-.sort((a,b)=>a.name.localeCompare(b.name))
-.forEach((c,i)=>{
-let d=document.createElement("div");
-d.className="card";
-d.innerHTML=`
-<span>${c.name}</span>
-<div class="actions">
-<i class="fa fa-phone" onclick="location.href='tel:${c.phone}'"></i>
-<i class="fa fa-pen" onclick="edit(${i})"></i>
-</div>`;
-box.appendChild(d);
-});
+  list.innerHTML="";
+  let q=search.value?.toLowerCase()||"";
+  contacts
+  .sort((a,b)=>a.name.localeCompare(b.name))
+  .filter(c=>{
+    if(q && !c.name.toLowerCase().includes(q))return false;
+    if(view==="fav")return c.fav;
+    if(view==="blocked")return c.block;
+    if(view==="emergency")return c.emg;
+    return true;
+  })
+  .forEach(c=>{
+    let d=document.createElement("div");
+    d.className="card";
+    d.innerHTML=`${c.name}<span>
+    <button class="icon-btn" onclick="alert('Calling ${c.number}')"><i class="fa fa-phone"></i></button>
+    <button class="icon-btn" onclick="alert('QR')"><i class="fa fa-qrcode"></i></button>
+    </span>`;
+    list.appendChild(d);
+  });
 }
 
-function edit(i){
-let c=contacts[i];
-name.value=c.name;
-phone.value=c.phone;
-email.value=c.email;
-group.value=c.group;
-fav.checked=c.fav;
-emg.checked=c.emg;
-editIndex=i;
-show("add");
+/* ===== VOICE SEARCH ===== */
+function voiceSearch(){
+  let rec=new webkitSpeechRecognition();
+  rec.onresult=e=>{search.value=e.results[0][0].transcript;render()}
+  rec.start();
+}
+
+/* ===== PRIVATE ===== */
+function openPrivate(){pinBox.style.display="flex"}
+function checkPin(){
+  if(pin.value===users[current].pin){
+    pinBox.style.display="none";
+    list.innerHTML="";
+    contacts.filter(c=>c.private).forEach(c=>{
+      let d=document.createElement("div");
+      d.className="card";
+      d.textContent=c.name;
+      list.appendChild(d);
+    })
+  } else alert("Wrong PIN");
 }
 </script>
-
 </body>
 </html>
