@@ -3,441 +3,427 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contact Hub</title>
-
-<!-- Firebase SDK (Compat) -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
-<!-- Font Awesome for icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-<!-- QRCode.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
-<!-- CSS -->
+<title>Contact Hub - Futuristic Neon</title>
 <style>
-body, html {
-    margin:0; padding:0;
-    font-family: 'Segoe UI', sans-serif;
-    background: #0B1D51;
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+
+  body {
+    margin: 0;
+    font-family: 'Orbitron', sans-serif;
+    background: linear-gradient(135deg,#1d0f5a,#5900ff);
     color: #fff;
     overflow-x: hidden;
-}
-/* Landing Page */
-#landing {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    text-align: center;
-    background: radial-gradient(ellipse at bottom, #0B1D51 0%, #030918 100%);
-    animation: pulse 5s infinite alternate;
-}
-#landing h1 {
-    font-size: 4rem;
-    background: linear-gradient(90deg, #00f6ff, #ff00f6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 40px;
-    text-shadow: 0 0 10px #00f6ff, 0 0 20px #ff00f6;
-}
-#landing button {
-    padding: 15px 40px;
-    font-size: 1.2rem;
-    margin: 10px;
-    border:none;
-    border-radius: 8px;
-    cursor:pointer;
-    background: linear-gradient(90deg, #00f6ff, #ff00f6);
-    color:#fff;
-    transition: 0.3s;
-    box-shadow: 0 0 10px #00f6ff, 0 0 20px #ff00f6;
-}
-#landing button:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 20px #00f6ff, 0 0 40px #ff00f6;
-}
-@keyframes pulse {
-    0% {background-position:0% 50%;}
-    100% {background-position:100% 50%;}
-}
+  }
 
-/* Forms */
-.form-container {
-    display:none;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-.form-card {
-    background: rgba(255,255,255,0.05);
+  /* Glow effect */
+  .neon-glow {
+    text-shadow:
+      0 0 5px #0ff,
+      0 0 10px #0ff,
+      0 0 20px #0ff,
+      0 0 40px #0ff;
+  }
+
+  header {
+    text-align: center;
+    padding: 50px 0 20px 0;
+  }
+
+  header h1 {
+    font-size: 4em;
+    color: #ff00ff;
+  }
+
+  .btn {
+    padding: 15px 40px;
+    margin: 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.2em;
+    color: #fff;
+    background: linear-gradient(45deg,#ff00ff,#00ffff);
+    box-shadow: 0 0 20px #ff00ff, 0 0 40px #00ffff;
+    transition: all 0.3s ease;
+  }
+
+  .btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 30px #ff00ff, 0 0 60px #00ffff;
+  }
+
+  /* Forms */
+  .form-container {
+    background: rgba(0,0,0,0.5);
     padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 0 20px #00f6ff, 0 0 40px #ff00f6;
-    min-width: 300px;
-}
-.form-card h2 {
-    margin-bottom: 20px;
-    text-align:center;
-}
-.form-card input {
+    border-radius: 20px;
+    width: 350px;
+    margin: 50px auto;
+    box-shadow: 0 0 30px #ff00ff, 0 0 60px #00ffff;
+  }
+
+  .form-container h2 {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .form-container input {
     width: 100%;
     padding: 12px;
     margin: 10px 0;
-    border:none;
-    border-radius: 6px;
-    background: rgba(255,255,255,0.1);
-    color:#fff;
-}
-.form-card button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    border:none;
-    border-radius:6px;
-    cursor:pointer;
-    background: linear-gradient(90deg, #00f6ff, #ff00f6);
-    color:#fff;
-    font-size:1rem;
-    box-shadow: 0 0 10px #00f6ff,0 0 20px #ff00f6;
-    transition:0.3s;
-}
-.form-card button:hover {
-    transform:scale(1.05);
-}
-
-/* Dashboard */
-#dashboard {
-    display:none;
-    padding:20px;
-}
-#dashboard h2 {
-    text-align:center;
-    margin-bottom:20px;
-}
-.tabs {
-    display:flex;
-    justify-content: center;
-    gap:15px;
-    margin-bottom:20px;
-    flex-wrap: wrap;
-}
-.tab {
-    padding:10px 20px;
-    border-radius:6px;
-    cursor:pointer;
-    background: linear-gradient(90deg, #00f6ff, #ff00f6);
-    color:#fff;
-    transition:0.3s;
-}
-.tab:hover {
-    transform:scale(1.05);
-}
-.tab.active {
-    box-shadow: 0 0 15px #00f6ff,0 0 30px #ff00f6;
-}
-.tab-content {
-    display:none;
-}
-.tab-content.active {
-    display:block;
-}
-
-/* Contact List */
-.contact-card {
-    display:flex;
-    justify-content: space-between;
-    align-items:center;
-    padding:10px;
-    margin:5px 0;
-    border-radius:8px;
+    border: 1px solid #0ff;
+    border-radius: 10px;
     background: rgba(255,255,255,0.05);
-    box-shadow: 0 0 5px #00f6ff;
-}
-.contact-actions i {
-    margin:0 5px;
-    cursor:pointer;
-    color:#00f6ff;
-}
+    color: #fff;
+    font-size: 1em;
+  }
 
-/* Add Contact Form */
-#addContactForm input, #addContactForm select {
-    width: calc(50% - 10px);
-    margin:5px;
-    padding:10px;
+  .form-container input:focus {
+    outline: none;
+    box-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff;
+    border-color: #0ff;
+  }
+
+  /* Dashboard */
+  .dashboard {
+    display: flex;
+    height: 100vh;
+  }
+
+  .sidebar {
+    width: 220px;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-shadow: 0 0 20px #ff00ff;
+  }
+
+  .sidebar h3 {
+    margin-bottom: 20px;
+  }
+
+  .sidebar button {
+    margin: 5px 0;
+    padding: 10px;
+    border: none;
+    background: transparent;
+    color: #0ff;
+    cursor: pointer;
+    text-align: left;
+    font-size: 1em;
+    transition: all 0.2s;
+  }
+
+  .sidebar button:hover {
+    color: #ff00ff;
+    text-shadow: 0 0 5px #ff00ff, 0 0 10px #0ff;
+  }
+
+  .main-content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+  }
+
+  .contact-card {
+    background: rgba(0,0,0,0.4);
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 0 10px #0ff;
+  }
+
+  .contact-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .contact-actions button {
+    margin-left: 10px;
+    border: none;
+    padding: 8px;
+    border-radius: 10px;
+    cursor: pointer;
+    background: linear-gradient(45deg,#ff00ff,#00ffff);
+    color: #fff;
+  }
+
+  /* Add Contact Modal */
+  .modal {
+    display: none;
+    position: fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: rgba(0,0,0,0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+  }
+
+  .modal-content {
+    background: rgba(0,0,0,0.7);
+    padding: 30px;
+    border-radius: 20px;
+    width: 400px;
+    box-shadow: 0 0 30px #ff00ff, 0 0 50px #00ffff;
+  }
+
+  .modal-content h3 {
+    text-align: center;
+  }
+
+  .modal-content input, .modal-content select {
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #0ff;
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+  }
+
+  .modal-content button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px;
+    border-radius: 15px;
     border:none;
-    border-radius:6px;
-    background: rgba(255,255,255,0.1);
-    color:#fff;
-}
-#addContactForm label {
-    margin-top:10px;
-    display:block;
-}
+    background: linear-gradient(45deg,#ff00ff,#00ffff);
+    color: #fff;
+    cursor: pointer;
+  }
 
-/* QR Code Container */
-#qrcode {
-    margin-top:10px;
-}
+  .search-bar {
+    margin-bottom: 20px;
+    display: flex;
+  }
+
+  .search-bar input {
+    flex:1;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #0ff;
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+  }
+
 </style>
 </head>
 <body>
 
-<!-- Landing Page -->
-<div id="landing">
-    <h1>Contact Hub</h1>
-    <button onclick="showForm('login')">Login</button>
-    <button onclick="showForm('register')">Register</button>
-</div>
+<header>
+  <h1 class="neon-glow">Contact Hub</h1>
+  <button class="btn" onclick="showForm('login')">Login</button>
+  <button class="btn" onclick="showForm('register')">Register</button>
+</header>
 
 <!-- Registration Form -->
-<div id="register" class="form-container">
-    <div class="form-card">
-        <h2>Register</h2>
-        <input type="text" id="regUsername" placeholder="Username (max 50 chars)">
-        <input type="email" id="regEmail" placeholder="Email Address">
-        <input type="password" id="regPassword" placeholder="Password">
-        <input type="password" id="regConfirm" placeholder="Confirm Password">
-        <button onclick="registerUser()">Create Profile</button>
-        <p style="text-align:center; margin-top:10px;">Already have an account? <span style="color:#00f6ff; cursor:pointer;" onclick="showForm('login')">Login</span></p>
-    </div>
+<div id="registerForm" class="form-container" style="display:none;">
+  <h2>Register</h2>
+  <input type="text" id="regUsername" placeholder="Username (max 50 chars)" maxlength="50">
+  <input type="email" id="regEmail" placeholder="Email Address">
+  <input type="password" id="regPassword" placeholder="Password (no spaces)">
+  <input type="password" id="regConfirmPassword" placeholder="Confirm Password">
+  <button onclick="registerUser()">Sign Up</button>
+  <p style="text-align:center;cursor:pointer;" onclick="showForm('login')">Already have an account? Login</p>
 </div>
 
 <!-- Login Form -->
-<div id="login" class="form-container">
-    <div class="form-card">
-        <h2>Login</h2>
-        <input type="email" id="loginEmail" placeholder="Email Address">
-        <input type="password" id="loginPassword" placeholder="Password">
-        <button onclick="loginUser()">Login</button>
-        <p style="text-align:center; margin-top:10px;">Don't have an account? <span style="color:#00f6ff; cursor:pointer;" onclick="showForm('register')">Register</span></p>
-    </div>
+<div id="loginForm" class="form-container" style="display:none;">
+  <h2>Login</h2>
+  <input type="text" id="loginUsername" placeholder="Username">
+  <input type="password" id="loginPassword" placeholder="Password">
+  <button onclick="loginUser()">Login</button>
+  <p style="text-align:center;cursor:pointer;" onclick="showForm('register')">Don't have an account? Register</p>
 </div>
 
 <!-- Dashboard -->
-<div id="dashboard">
-    <h2>Welcome to Contact Hub</h2>
-    <div class="tabs">
-        <div class="tab active" onclick="openTab('allContacts', this)">All Contacts</div>
-        <div class="tab" onclick="openTab('search', this)">Search</div>
-        <div class="tab" onclick="openTab('addContact', this)">Add Contact</div>
-        <div class="tab" onclick="openTab('favorites', this)">Favorites</div>
-        <div class="tab" onclick="openTab('groups', this)">Groups</div>
-        <div class="tab" onclick="openTab('blocked', this)">Blocked</div>
-        <div class="tab" onclick="openTab('private', this)">Private</div>
-        <div class="tab" onclick="openTab('emergency', this)">Emergency</div>
-        <div class="tab" onclick="logoutUser()">Logout</div>
+<div id="dashboard" class="dashboard" style="display:none;">
+  <div class="sidebar">
+    <h3>Menu</h3>
+    <button onclick="showContacts('all')">All Contacts</button>
+    <button onclick="showContacts('favorites')">Favorites</button>
+    <button onclick="showContacts('groups')">Groups</button>
+    <button onclick="showContacts('private')">Private</button>
+    <button onclick="showContacts('blocked')">Blocked</button>
+    <button onclick="showContacts('emergency')">Emergency</button>
+    <button onclick="showAddContact()">Add Contact</button>
+    <button onclick="logout()">Logout</button>
+  </div>
+  <div class="main-content">
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search Contacts..." oninput="searchContacts()">
     </div>
-
-    <div id="allContacts" class="tab-content active">
-        <h3>All Contacts</h3>
-        <div id="contactList"></div>
-    </div>
-
-    <div id="search" class="tab-content">
-        <h3>Search Contacts</h3>
-        <input type="text" id="searchInput" placeholder="Search by name or number" oninput="searchContacts()">
-    </div>
-
-    <div id="addContact" class="tab-content">
-        <h3>Add New Contact</h3>
-        <form id="addContactForm" onsubmit="addContact(event)">
-            <input type="text" id="firstName" placeholder="First Name" required>
-            <input type="text" id="surname" placeholder="Surname" required>
-            <input type="text" id="phone" placeholder="Phone Number" required>
-            <input type="email" id="email" placeholder="Email">
-            <input type="date" id="dob">
-            <select id="blood">
-                <option value="">Blood Group</option>
-                <option value="O+">O+</option>
-                <option value="O-">O-</option>
-                <option value="A+">A+</option>
-                <option value="A-">A-</option>
-                <option value="B+">B+</option>
-                <option value="B-">B-</option>
-                <option value="AB+">AB+</option>
-                <option value="AB-">AB-</option>
-            </select>
-            <div>
-                <label><input type="checkbox" id="groupFamily"> Family</label>
-                <label><input type="checkbox" id="groupFriends"> Friends</label>
-                <label><input type="checkbox" id="privateContact"> Private</label>
-                <label><input type="checkbox" id="emergencyContact"> Emergency</label>
-            </div>
-            <button type="submit">Save Contact</button>
-        </form>
-        <div id="qrcode"></div>
-    </div>
-
-    <!-- Placeholder tabs -->
-    <div id="favorites" class="tab-content"><h3>Favorites</h3></div>
-    <div id="groups" class="tab-content"><h3>Groups</h3></div>
-    <div id="blocked" class="tab-content"><h3>Blocked Contacts</h3></div>
-    <div id="private" class="tab-content"><h3>Private Contacts</h3></div>
-    <div id="emergency" class="tab-content"><h3>Emergency Contacts</h3></div>
+    <div id="contactList"></div>
+  </div>
 </div>
 
-<!-- JS -->
+<!-- Add Contact Modal -->
+<div id="addContactModal" class="modal">
+  <div class="modal-content">
+    <h3>Add Contact</h3>
+    <input type="text" id="contactFirstName" placeholder="First Name">
+    <input type="text" id="contactSurname" placeholder="Surname">
+    <input type="text" id="contactNumber" placeholder="Phone Number">
+    <input type="email" id="contactEmail" placeholder="Email">
+    <input type="date" id="contactDOB" placeholder="Date of Birth">
+    <select id="contactBlood">
+      <option value="">Blood Group</option>
+      <option>O+</option><option>O-</option><option>A+</option><option>A-</option>
+      <option>B+</option><option>B-</option><option>AB+</option><option>AB-</option>
+    </select>
+    <input type="text" id="contactGroup" placeholder="Group (Family, Friend, etc)">
+    <label><input type="checkbox" id="contactPrivate"> Private Contact</label>
+    <label><input type="checkbox" id="contactFavorite"> Favorite</label>
+    <label><input type="checkbox" id="contactEmergency"> Emergency</label>
+    <button onclick="addContact()">Save Contact</button>
+    <button style="margin-top:10px;" onclick="closeAddContact()">Cancel</button>
+  </div>
+</div>
+
 <script>
-  // Firebase config
- const firebaseConfig = {
-    apiKey: "AIzaSyBqyot01Qdc3VgxQWXWX_qLf25eTLbl-QY",
-    authDomain: "contact-book-59258.firebaseapp.com",
-    projectId: "contact-book-59258",
-    storageBucket: "contact-book-59258.firebasestorage.app",
-    messagingSenderId: "153490528056",
-    appId: "1:153490528056:web:473a1ead13e6c64f1dd3cd",
-    measurementId: "G-GC7D5Y46LG"
-  };
+  let users = JSON.parse(localStorage.getItem('users')) || [];
+  let currentUser = null;
+  let contacts = [];
 
-  // Initialize Firebase (compat)
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.firestore();
-
-  // Show form
   function showForm(form){
-    document.getElementById('landing').style.display='none';
-    document.getElementById('register').style.display='none';
-    document.getElementById('login').style.display='none';
-    if(form==='register') document.getElementById('register').style.display='flex';
-    if(form==='login') document.getElementById('login').style.display='flex';
+    document.getElementById('registerForm').style.display = form=='register'?'block':'none';
+    document.getElementById('loginForm').style.display = form=='login'?'block':'none';
+    document.getElementById('dashboard').style.display = 'none';
   }
 
-  // Open tabs
-  function openTab(tab, element){
-    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-    element.classList.add('active');
-    document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
-    document.getElementById(tab).classList.add('active');
-    if(tab==='allContacts') loadContacts();
-  }
-
-  // Register User
   function registerUser(){
-    const username = document.getElementById('regUsername').value;
-    const email = document.getElementById('regEmail').value;
+    const username = document.getElementById('regUsername').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
     const password = document.getElementById('regPassword').value;
-    const confirm = document.getElementById('regConfirm').value;
-    if(username.length>50){ alert("Username max 50 chars"); return;}
-    if(password.includes(" ")){ alert("Password cannot contain spaces"); return;}
-    if(password!==confirm){ alert("Passwords do not match"); return;}
-    auth.createUserWithEmailAndPassword(email, password)
-    .then((userCredential)=>{
-        db.collection("users").doc(userCredential.user.uid).set({username:username});
-        alert("Profile created!");
-        showForm('login');
-    })
-    .catch((error)=>{alert(error.message);});
+    const confirm = document.getElementById('regConfirmPassword').value;
+    if(!username || !email || !password || !confirm){
+      alert("Fill all fields"); return;
+    }
+    if(password.includes(' ')){
+      alert("Password cannot contain spaces"); return;
+    }
+    if(password !== confirm){
+      alert("Passwords do not match"); return;
+    }
+    if(users.find(u=>u.username===username)){
+      alert("Username already exists"); return;
+    }
+    users.push({username,email,password,contacts:[]});
+    localStorage.setItem('users', JSON.stringify(users));
+    alert("Registration successful!");
+    showForm('login');
   }
 
-  // Login User
   function loginUser(){
-    const email = document.getElementById('loginEmail').value;
+    const username = document.getElementById('loginUsername').value.trim();
     const password = document.getElementById('loginPassword').value;
-    auth.signInWithEmailAndPassword(email, password)
-    .then((userCredential)=>{
-        document.getElementById('login').style.display='none';
-        document.getElementById('dashboard').style.display='block';
-        loadContacts();
-    })
-    .catch((error)=>{alert(error.message);});
+    const user = users.find(u=>u.username===username && u.password===password);
+    if(user){
+      currentUser = user;
+      contacts = currentUser.contacts || [];
+      document.getElementById('dashboard').style.display='flex';
+      document.getElementById('loginForm').style.display='none';
+      document.getElementById('registerForm').style.display='none';
+      showContacts('all');
+    }else{
+      alert("Invalid credentials");
+    }
   }
 
-  // Logout
-  function logoutUser(){
-    auth.signOut().then(()=>{location.reload();});
+  function logout(){
+    currentUser=null;
+    contacts=[];
+    showForm('login');
   }
 
-  // Add Contact
-  function addContact(e){
-    e.preventDefault();
-    const user = auth.currentUser;
-    if(!user) return alert("Not logged in");
-    const data = {
-      firstName: document.getElementById('firstName').value,
-      surname: document.getElementById('surname').value,
-      phone: document.getElementById('phone').value,
-      email: document.getElementById('email').value,
-      dob: document.getElementById('dob').value,
-      blood: document.getElementById('blood').value,
-      family: document.getElementById('groupFamily').checked,
-      friends: document.getElementById('groupFriends').checked,
-      private: document.getElementById('privateContact').checked,
-      emergency: document.getElementById('emergencyContact').checked,
-      timestamp: Date.now()
-    };
-    db.collection("users").doc(user.uid).collection("contacts").add(data)
-    .then(()=>{
-        alert("Contact added!");
-        document.getElementById('addContactForm').reset();
-        loadContacts();
-        generateQR(data);
-    });
+  function showAddContact(){
+    document.getElementById('addContactModal').style.display='flex';
   }
 
-  // Load Contacts
-  function loadContacts(){
-    const user = auth.currentUser;
-    if(!user) return;
+  function closeAddContact(){
+    document.getElementById('addContactModal').style.display='none';
+  }
+
+  function addContact(){
+    const firstName = document.getElementById('contactFirstName').value.trim();
+    const surname = document.getElementById('contactSurname').value.trim();
+    const number = document.getElementById('contactNumber').value.trim();
+    const email = document.getElementById('contactEmail').value.trim();
+    const dob = document.getElementById('contactDOB').value;
+    const blood = document.getElementById('contactBlood').value;
+    const group = document.getElementById('contactGroup').value.trim();
+    const privateC = document.getElementById('contactPrivate').checked;
+    const favorite = document.getElementById('contactFavorite').checked;
+    const emergency = document.getElementById('contactEmergency').checked;
+    if(!firstName || !number) { alert("First Name and Number required"); return;}
+    const newContact = {firstName,surname,number,email,dob,blood,group,privateC,favorite,emergency};
+    contacts.push(newContact);
+    currentUser.contacts = contacts;
+    users = users.map(u=>u.username===currentUser.username?currentUser:u);
+    localStorage.setItem('users', JSON.stringify(users));
+    closeAddContact();
+    showContacts('all');
+  }
+
+  function showContacts(type){
     const list = document.getElementById('contactList');
     list.innerHTML='';
-    db.collection("users").doc(user.uid).collection("contacts")
-    .orderBy('firstName')
-    .get()
-    .then((snapshot)=>{
-        snapshot.forEach(doc=>{
-            const c = doc.data();
-            const div = document.createElement('div');
-            div.classList.add('contact-card');
-            div.innerHTML = `<div>${c.firstName} ${c.surname}</div>
-            <div class="contact-actions">
-            <i class="fas fa-phone"></i>
-            <i class="fas fa-comment"></i>
-            <i class="fas fa-video"></i>
-            <i class="fas fa-map-marker-alt"></i>
-            <i class="fas fa-qrcode" onclick='generateQR(${JSON.stringify(c)})'></i>
-            </div>`;
-            list.appendChild(div);
-        });
+    let filtered = [];
+    if(type==='all') filtered = contacts;
+    else if(type==='favorites') filtered = contacts.filter(c=>c.favorite);
+    else if(type==='private') filtered = contacts.filter(c=>c.privateC);
+    else if(type==='emergency') filtered = contacts.filter(c=>c.emergency);
+    else if(type==='groups') filtered = contacts.filter(c=>c.group);
+    else if(type==='blocked') filtered = contacts.filter(c=>c.blocked);
+    filtered.sort((a,b)=>a.firstName.localeCompare(b.firstName));
+    filtered.forEach(c=>{
+      const card = document.createElement('div');
+      card.className='contact-card';
+      card.innerHTML=`
+        <div class="contact-info">
+          <b>${c.firstName} ${c.surname || ''}</b>
+          <span>${c.number}</span>
+          <span>${c.email || ''}</span>
+          <span>${c.group || ''}</span>
+        </div>
+        <div class="contact-actions">
+          <button onclick="alert('Call ${c.number}')">📞</button>
+          <button onclick="alert('SMS ${c.number}')">💬</button>
+          <button onclick="alert('Video Call ${c.number}')">🎥</button>
+          <button onclick="alert('QR Code for ${c.firstName}')">🔳</button>
+        </div>
+      `;
+      list.appendChild(card);
     });
   }
 
-  // Search Contacts
   function searchContacts(){
-    const query = document.getElementById('searchInput').value.toLowerCase();
-    const user = auth.currentUser;
-    if(!user) return;
+    const val = document.getElementById('searchInput').value.toLowerCase();
     const list = document.getElementById('contactList');
     list.innerHTML='';
-    db.collection("users").doc(user.uid).collection("contacts")
-    .get()
-    .then(snapshot=>{
-        snapshot.forEach(doc=>{
-            const c = doc.data();
-            if(c.firstName.toLowerCase().includes(query) || c.phone.includes(query)){
-                const div = document.createElement('div');
-                div.classList.add('contact-card');
-                div.innerHTML = `<div>${c.firstName} ${c.surname}</div>`;
-                list.appendChild(div);
-            }
-        });
-    });
-  }
-
-  // Generate QR
-  function generateQR(data){
-    document.getElementById('qrcode').innerHTML='';
-    new QRCode(document.getElementById('qrcode'), {
-        text: JSON.stringify(data),
-        width:128,
-        height:128
+    const filtered = contacts.filter(c=>c.firstName.toLowerCase().includes(val) || c.surname.toLowerCase().includes(val) || c.number.includes(val));
+    filtered.forEach(c=>{
+      const card = document.createElement('div');
+      card.className='contact-card';
+      card.innerHTML=`
+        <div class="contact-info">
+          <b>${c.firstName} ${c.surname || ''}</b>
+          <span>${c.number}</span>
+        </div>
+        <div class="contact-actions">
+          <button onclick="alert('Call ${c.number}')">📞</button>
+          <button onclick="alert('SMS ${c.number}')">💬</button>
+        </div>
+      `;
+      list.appendChild(card);
     });
   }
 </script>
+
 </body>
 </html>
