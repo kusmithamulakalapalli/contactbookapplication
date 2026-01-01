@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Contact Hub</title>
 
-<!-- Firebase SDK -->
+<!-- Firebase SDK (Compat) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -18,173 +18,171 @@
 
 <!-- CSS -->
 <style>
-    body, html {
-        margin:0; padding:0;
-        font-family: 'Segoe UI', sans-serif;
-        background: #0B1D51;
-        color: #fff;
-        overflow-x: hidden;
-    }
-    /* Landing Page */
-    #landing {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        text-align: center;
-        background: radial-gradient(ellipse at bottom, #0B1D51 0%, #030918 100%);
-        animation: pulse 5s infinite alternate;
-    }
-    #landing h1 {
-        font-size: 4rem;
-        background: linear-gradient(90deg, #00f6ff, #ff00f6);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 40px;
-        text-shadow: 0 0 10px #00f6ff, 0 0 20px #ff00f6;
-    }
-    #landing button {
-        padding: 15px 40px;
-        font-size: 1.2rem;
-        margin: 10px;
-        border:none;
-        border-radius: 8px;
-        cursor:pointer;
-        background: linear-gradient(90deg, #00f6ff, #ff00f6);
-        color:#fff;
-        transition: 0.3s;
-        box-shadow: 0 0 10px #00f6ff, 0 0 20px #ff00f6;
-    }
-    #landing button:hover {
-        transform: scale(1.1);
-        box-shadow: 0 0 20px #00f6ff, 0 0 40px #ff00f6;
-    }
+body, html {
+    margin:0; padding:0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #0B1D51;
+    color: #fff;
+    overflow-x: hidden;
+}
+/* Landing Page */
+#landing {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    background: radial-gradient(ellipse at bottom, #0B1D51 0%, #030918 100%);
+    animation: pulse 5s infinite alternate;
+}
+#landing h1 {
+    font-size: 4rem;
+    background: linear-gradient(90deg, #00f6ff, #ff00f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 40px;
+    text-shadow: 0 0 10px #00f6ff, 0 0 20px #ff00f6;
+}
+#landing button {
+    padding: 15px 40px;
+    font-size: 1.2rem;
+    margin: 10px;
+    border:none;
+    border-radius: 8px;
+    cursor:pointer;
+    background: linear-gradient(90deg, #00f6ff, #ff00f6);
+    color:#fff;
+    transition: 0.3s;
+    box-shadow: 0 0 10px #00f6ff, 0 0 20px #ff00f6;
+}
+#landing button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px #00f6ff, 0 0 40px #ff00f6;
+}
+@keyframes pulse {
+    0% {background-position:0% 50%;}
+    100% {background-position:100% 50%;}
+}
 
-    @keyframes pulse {
-        0% {background-position:0% 50%;}
-        100% {background-position:100% 50%;}
-    }
+/* Forms */
+.form-container {
+    display:none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.form-card {
+    background: rgba(255,255,255,0.05);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px #00f6ff, 0 0 40px #ff00f6;
+    min-width: 300px;
+}
+.form-card h2 {
+    margin-bottom: 20px;
+    text-align:center;
+}
+.form-card input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border:none;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.1);
+    color:#fff;
+}
+.form-card button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    background: linear-gradient(90deg, #00f6ff, #ff00f6);
+    color:#fff;
+    font-size:1rem;
+    box-shadow: 0 0 10px #00f6ff,0 0 20px #ff00f6;
+    transition:0.3s;
+}
+.form-card button:hover {
+    transform:scale(1.05);
+}
 
-    /* Forms */
-    .form-container {
-        display:none;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
-    .form-card {
-        background: rgba(255,255,255,0.05);
-        padding: 40px;
-        border-radius: 12px;
-        box-shadow: 0 0 20px #00f6ff, 0 0 40px #ff00f6;
-        min-width: 300px;
-    }
-    .form-card h2 {
-        margin-bottom: 20px;
-        text-align:center;
-    }
-    .form-card input {
-        width: 100%;
-        padding: 12px;
-        margin: 10px 0;
-        border:none;
-        border-radius: 6px;
-        background: rgba(255,255,255,0.1);
-        color:#fff;
-    }
-    .form-card button {
-        width: 100%;
-        padding: 12px;
-        margin-top: 10px;
-        border:none;
-        border-radius:6px;
-        cursor:pointer;
-        background: linear-gradient(90deg, #00f6ff, #ff00f6);
-        color:#fff;
-        font-size:1rem;
-        box-shadow: 0 0 10px #00f6ff,0 0 20px #ff00f6;
-        transition:0.3s;
-    }
-    .form-card button:hover {
-        transform:scale(1.05);
-    }
+/* Dashboard */
+#dashboard {
+    display:none;
+    padding:20px;
+}
+#dashboard h2 {
+    text-align:center;
+    margin-bottom:20px;
+}
+.tabs {
+    display:flex;
+    justify-content: center;
+    gap:15px;
+    margin-bottom:20px;
+    flex-wrap: wrap;
+}
+.tab {
+    padding:10px 20px;
+    border-radius:6px;
+    cursor:pointer;
+    background: linear-gradient(90deg, #00f6ff, #ff00f6);
+    color:#fff;
+    transition:0.3s;
+}
+.tab:hover {
+    transform:scale(1.05);
+}
+.tab.active {
+    box-shadow: 0 0 15px #00f6ff,0 0 30px #ff00f6;
+}
+.tab-content {
+    display:none;
+}
+.tab-content.active {
+    display:block;
+}
 
-    /* Dashboard */
-    #dashboard {
-        display:none;
-        padding:20px;
-    }
-    #dashboard h2 {
-        text-align:center;
-        margin-bottom:20px;
-    }
-    .tabs {
-        display:flex;
-        justify-content: center;
-        gap:15px;
-        margin-bottom:20px;
-        flex-wrap: wrap;
-    }
-    .tab {
-        padding:10px 20px;
-        border-radius:6px;
-        cursor:pointer;
-        background: linear-gradient(90deg, #00f6ff, #ff00f6);
-        color:#fff;
-        transition:0.3s;
-    }
-    .tab:hover {
-        transform:scale(1.05);
-    }
-    .tab.active {
-        box-shadow: 0 0 15px #00f6ff,0 0 30px #ff00f6;
-    }
-    .tab-content {
-        display:none;
-    }
-    .tab-content.active {
-        display:block;
-    }
+/* Contact List */
+.contact-card {
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    padding:10px;
+    margin:5px 0;
+    border-radius:8px;
+    background: rgba(255,255,255,0.05);
+    box-shadow: 0 0 5px #00f6ff;
+}
+.contact-actions i {
+    margin:0 5px;
+    cursor:pointer;
+    color:#00f6ff;
+}
 
-    /* Contact List */
-    .contact-card {
-        display:flex;
-        justify-content: space-between;
-        align-items:center;
-        padding:10px;
-        margin:5px 0;
-        border-radius:8px;
-        background: rgba(255,255,255,0.05);
-        box-shadow: 0 0 5px #00f6ff;
-    }
-    .contact-actions i {
-        margin:0 5px;
-        cursor:pointer;
-        color:#00f6ff;
-    }
+/* Add Contact Form */
+#addContactForm input, #addContactForm select {
+    width: calc(50% - 10px);
+    margin:5px;
+    padding:10px;
+    border:none;
+    border-radius:6px;
+    background: rgba(255,255,255,0.1);
+    color:#fff;
+}
+#addContactForm label {
+    margin-top:10px;
+    display:block;
+}
 
-    /* Add Contact Form */
-    #addContactForm input, #addContactForm select {
-        width: calc(50% - 10px);
-        margin:5px;
-        padding:10px;
-        border:none;
-        border-radius:6px;
-        background: rgba(255,255,255,0.1);
-        color:#fff;
-    }
-    #addContactForm label {
-        margin-top:10px;
-        display:block;
-    }
-
-    /* QR Code Container */
-    #qrcode {
-        margin-top:10px;
-    }
-
+/* QR Code Container */
+#qrcode {
+    margin-top:10px;
+}
 </style>
 </head>
 <body>
@@ -285,8 +283,8 @@
 
 <!-- JS -->
 <script>
-    // Firebase config
-    const firebaseConfig = {
+  // Firebase config
+ const firebaseConfig = {
     apiKey: "AIzaSyBqyot01Qdc3VgxQWXWX_qLf25eTLbl-QY",
     authDomain: "contact-book-59258.firebaseapp.com",
     projectId: "contact-book-59258",
@@ -295,6 +293,8 @@
     appId: "1:153490528056:web:473a1ead13e6c64f1dd3cd",
     measurementId: "G-GC7D5Y46LG"
   };
+
+  // Initialize Firebase (compat)
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
   const db = firebase.firestore();
@@ -400,7 +400,7 @@
             <i class="fas fa-comment"></i>
             <i class="fas fa-video"></i>
             <i class="fas fa-map-marker-alt"></i>
-            <i class="fas fa-qrcode" onclick="generateQR(${JSON.stringify(c)})"></i>
+            <i class="fas fa-qrcode" onclick='generateQR(${JSON.stringify(c)})'></i>
             </div>`;
             list.appendChild(div);
         });
@@ -438,8 +438,6 @@
         height:128
     });
   }
-
 </script>
-
 </body>
 </html>
