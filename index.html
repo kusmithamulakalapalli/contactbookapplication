@@ -6,7 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
 
 <style>
 body{
@@ -23,17 +22,18 @@ border-radius:8px;
 background:#0a84ff;
 color:white;
 cursor:pointer;
-margin:5px;
+margin:6px;
 }
 .btn:hover{background:#0066cc}
 
-/* ---------- LANDING ---------- */
+/* LANDING */
 .landing{
 height:100vh;
 display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
+text-align:center;
 }
 .logo{
 font-size:64px;
@@ -41,19 +41,16 @@ font-weight:bold;
 color:#7fd7ff;
 text-shadow:0 0 25px #00aaff;
 }
-.sub{
-opacity:.8;
-margin-bottom:20px;
-}
+.sub{opacity:.8;margin-bottom:20px}
 
-/* ---------- FORMS ---------- */
+/* FORMS */
 .form{
 width:350px;
-background:rgba(255,255,255,0.08);
-backdrop-filter:blur(10px);
+background:rgba(255,255,255,0.1);
+backdrop-filter:blur(12px);
 padding:25px;
 border-radius:15px;
-box-shadow:0 0 25px #000;
+box-shadow:0 0 30px #000;
 }
 .form h2{text-align:center}
 input,select{
@@ -65,7 +62,7 @@ border:none;
 outline:none;
 }
 
-/* ---------- DASHBOARD ---------- */
+/* DASHBOARD */
 .topbar{
 background:#081a33;
 padding:15px;
@@ -80,7 +77,6 @@ position:fixed;
 top:60px;
 bottom:0;
 padding:15px;
-overflow:auto;
 }
 .sidebar button{width:100%}
 .main{
@@ -88,9 +84,9 @@ margin-left:250px;
 padding:20px;
 }
 
-/* ---------- CONTACT CARD ---------- */
+/* CONTACT CARD */
 .card{
-background:rgba(255,255,255,0.08);
+background:rgba(255,255,255,0.1);
 padding:12px;
 border-radius:12px;
 margin:8px 0;
@@ -113,8 +109,8 @@ color:#7fd7ff;
 <div class="landing" id="landing">
 <div class="logo">📇 Contact Hub</div>
 <div class="sub">Store • Secure • Communicate</div>
-<button class="btn" onclick="openRegister()">✨ Register</button>
-<button class="btn" onclick="openLogin()">🔐 Login</button>
+<button class="btn" id="openRegister">✨ Register</button>
+<button class="btn" id="openLogin">🔐 Login</button>
 </div>
 
 <!-- REGISTER -->
@@ -125,7 +121,7 @@ color:#7fd7ff;
 <input id="rEmail" type="email" placeholder="Email">
 <input id="rPass" type="password" placeholder="Password (no spaces)">
 <input id="rCPass" type="password" placeholder="Confirm Password">
-<button class="btn" onclick="register()">Create</button>
+<button class="btn" id="registerBtn">Create Account</button>
 </div>
 </div>
 
@@ -135,7 +131,7 @@ color:#7fd7ff;
 <h2>🔐 Login</h2>
 <input id="lUser" placeholder="Username">
 <input id="lPass" type="password" placeholder="Password">
-<button class="btn" onclick="login()">Login</button>
+<button class="btn" id="loginBtn">Login</button>
 </div>
 </div>
 
@@ -143,100 +139,123 @@ color:#7fd7ff;
 <div id="dash" class="hidden">
 <div class="topbar">
 <h2>📇 Contact Hub</h2>
-<button class="btn" onclick="logout()">Logout</button>
+<button class="btn" id="logoutBtn">Logout</button>
 </div>
 
 <div class="sidebar">
 <button class="btn" onclick="show('all')">📖 All</button>
 <button class="btn" onclick="show('add')">➕ Add</button>
 <button class="btn" onclick="show('fav')">⭐ Favourites</button>
-<button class="btn" onclick="show('groups')">👨‍👩‍👧‍👦 Groups</button>
 <button class="btn" onclick="show('emg')">🚨 Emergency</button>
-<button class="btn" onclick="unlockPrivate()">🔒 Private</button>
 </div>
 
 <div class="main">
 <input id="search" placeholder="🔍 Search..." onkeyup="render()">
 
 <div id="add" class="hidden">
-<h3>➕ Add Contact</h3>
+<h3>➕ Add / Edit Contact</h3>
 <input id="name" placeholder="Full Name">
 <input id="phone" placeholder="Phone">
-<input id="email">
+<input id="email" placeholder="Email">
 <select id="group">
-<option>Family</option><option>Friends</option><option>Office</option>
+<option>Family</option>
+<option>Friends</option>
+<option>Office</option>
 </select>
-<label><input type="checkbox" id="fav"> ⭐ Favourite</label>
-<label><input type="checkbox" id="emg"> 🚨 Emergency</label>
-<label><input type="checkbox" id="priv"> 🔒 Private</label>
-<button class="btn" onclick="save()">Save</button>
+<label><input type="checkbox" id="fav"> ⭐ Favourite</label><br>
+<label><input type="checkbox" id="emg"> 🚨 Emergency</label><br>
+<button class="btn" onclick="save()">Save Contact</button>
 </div>
 
 <div id="all"></div>
 <div id="fav" class="hidden"></div>
-<div id="groups" class="hidden"></div>
 <div id="emg" class="hidden"></div>
 
 </div>
 </div>
 
 <script>
+/* ---------- ELEMENTS ---------- */
+const landing = document.getElementById("landing");
+const registerPage = document.getElementById("register");
+const loginPage = document.getElementById("login");
+const dash = document.getElementById("dash");
+
+/* ---------- BUTTON EVENTS ---------- */
+document.getElementById("openRegister").onclick = () => {
+landing.classList.add("hidden");
+registerPage.classList.remove("hidden");
+};
+
+document.getElementById("openLogin").onclick = () => {
+landing.classList.add("hidden");
+loginPage.classList.remove("hidden");
+};
+
+document.getElementById("registerBtn").onclick = register;
+document.getElementById("loginBtn").onclick = login;
+document.getElementById("logoutBtn").onclick = () => location.reload();
+
+/* ---------- DATA ---------- */
 let user="", contacts=[], mode="all", editIndex=null;
 
-function openRegister(){landing.classList.add("hidden");register.classList.remove("hidden")}
-function openLogin(){landing.classList.add("hidden");login.classList.remove("hidden")}
-
+/* ---------- AUTH ---------- */
 function register(){
 if(rUser.value.length>50) return alert("Username too long");
-if(rPass.value.includes(" ")) return alert("No spaces allowed");
-if(rPass.value!==rCPass.value) return alert("Password mismatch");
+if(rPass.value.includes(" ")) return alert("Password cannot contain spaces");
+if(rPass.value!==rCPass.value) return alert("Passwords do not match");
 
-localStorage.setItem("user_"+rUser.value,JSON.stringify({
-email:rEmail.value,pass:rPass.value,pin:"1234"
+localStorage.setItem("user_"+rUser.value, JSON.stringify({
+email:rEmail.value,
+pass:rPass.value
 }));
-alert("Registered!");
-openLogin();
+alert("Registration successful!");
+registerPage.classList.add("hidden");
+loginPage.classList.remove("hidden");
 }
 
 function login(){
-let data=JSON.parse(localStorage.getItem("user_"+lUser.value));
-if(!data||data.pass!==lPass.value) return alert("Invalid");
-user=lUser.value;
-contacts=JSON.parse(localStorage.getItem("contacts_"+user)||"[]");
-login.classList.add("hidden");
+let data = JSON.parse(localStorage.getItem("user_"+lUser.value));
+if(!data || data.pass !== lPass.value) return alert("Invalid login");
+
+user = lUser.value;
+contacts = JSON.parse(localStorage.getItem("contacts_"+user) || "[]");
+
+loginPage.classList.add("hidden");
 dash.classList.remove("hidden");
 render();
 }
 
-function logout(){location.reload()}
+/* ---------- CONTACTS ---------- */
 function show(p){mode=p;render()}
 
 function save(){
 let c={
-name:name.value,phone:phone.value,email:email.value,
+name:name.value,
+phone:phone.value,
+email:email.value,
 group:group.value,
-fav:fav.checked,emg:emg.checked,priv:priv.checked
+fav:fav.checked,
+emg:emg.checked
 };
 if(editIndex!==null){contacts[editIndex]=c;editIndex=null}
 else contacts.push(c);
-localStorage.setItem("contacts_"+user,JSON.stringify(contacts));
-alert("Saved");
+
+localStorage.setItem("contacts_"+user, JSON.stringify(contacts));
+alert("Contact saved");
 show("all");
 }
 
 function render(){
-["all","fav","groups","emg"].forEach(i=>document.getElementById(i).classList.add("hidden"));
+["all","fav","emg","add"].forEach(i=>document.getElementById(i).classList.add("hidden"));
 document.getElementById(mode).classList.remove("hidden");
 
 let box=document.getElementById(mode);
-box.innerHTML="";
-let s=search.value?.toLowerCase()||"";
+if(mode==="add") return;
 
-contacts.filter(c=>{
-if(mode==="fav") return c.fav;
-if(mode==="emg") return c.emg;
-return true;
-}).filter(c=>c.name.toLowerCase().includes(s))
+box.innerHTML="";
+contacts
+.filter(c=>mode==="fav"?c.fav:mode==="emg"?c.emg:true)
 .sort((a,b)=>a.name.localeCompare(b.name))
 .forEach((c,i)=>{
 let d=document.createElement("div");
@@ -253,15 +272,14 @@ box.appendChild(d);
 
 function edit(i){
 let c=contacts[i];
-name.value=c.name;phone.value=c.phone;email.value=c.email;
-group.value=c.group;fav.checked=c.fav;emg.checked=c.emg;priv.checked=c.priv;
-editIndex=i;show("add");
-}
-
-function unlockPrivate(){
-let p=prompt("Enter Private PIN");
-if(p==="1234"){mode="all";render()}
-else alert("Wrong PIN");
+name.value=c.name;
+phone.value=c.phone;
+email.value=c.email;
+group.value=c.group;
+fav.checked=c.fav;
+emg.checked=c.emg;
+editIndex=i;
+show("add");
 }
 </script>
 
