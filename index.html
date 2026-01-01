@@ -2,77 +2,123 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Contact Hub</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Hub</title>
 
 <!-- Icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-<!-- QR -->
+<!-- QR code -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <style>
 :root{
-  --blue:#0a1f44;
+  --primary:#0a1f44;
   --glow:#00c6ff;
 }
 *{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI;}
-body{background:linear-gradient(120deg,#020b2d,#061b45);color:white}
+body{
+  background:linear-gradient(120deg,#020b2d,#061b45);
+  color:white;
+}
 
-/* ===== LANDING ===== */
+/* LANDING PAGE */
 #landing{
-  height:100vh;display:flex;flex-direction:column;
-  justify-content:center;align-items:center;
-  text-align:center
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  background:linear-gradient(to bottom,#061b45,#020b2d);
 }
 .logo{
-  font-size:3.5rem;font-weight:bold;
+  font-size:4rem;
+  font-weight:bold;
   text-shadow:0 0 20px var(--glow);
+  margin-bottom:20px;
 }
 .btn{
-  margin:10px;padding:15px 40px;
-  border:none;border-radius:30px;
-  background:var(--glow);color:#000;
-  font-weight:bold;cursor:pointer
+  margin:10px;
+  padding:15px 50px;
+  border:none;
+  border-radius:30px;
+  background:var(--glow);
+  color:#000;
+  font-weight:bold;
+  cursor:pointer;
+  font-size:1.1rem;
+  box-shadow:0 0 15px var(--glow);
+  transition:0.3s;
+}
+.btn:hover{
+  box-shadow:0 0 25px #00ffff;
 }
 
-/* ===== FORMS ===== */
+/* FORM STYLES */
 .form{
-  display:none;max-width:400px;
-  margin:40px auto;background:#061b45;
-  padding:25px;border-radius:10px;
-  box-shadow:0 0 15px #00c6ff
+  display:none;
+  max-width:450px;
+  margin:40px auto;
+  background:rgba(10,31,68,0.95);
+  padding:25px;
+  border-radius:15px;
+  box-shadow:0 0 20px var(--glow);
 }
-input,select{
-  width:100%;padding:10px;
-  margin:8px 0;border-radius:5px;
-  border:none
+input, select{
+  width:100%;
+  padding:12px;
+  margin:10px 0;
+  border-radius:6px;
+  border:none;
+  font-size:1rem;
 }
-
-/* ===== DASHBOARD ===== */
-#dashboard{display:none;padding:20px}
-nav{
-  display:flex;gap:10px;
-  flex-wrap:wrap;margin-bottom:15px
+input[type=checkbox]{width:auto;margin-right:10px;}
+h2,h3{text-align:center;margin-bottom:15px;}
+label{display:block;margin:5px 0;}
+#dashboard nav{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:20px;
 }
-nav button{
-  padding:10px;border:none;
-  border-radius:5px;cursor:pointer
+#dashboard nav button{
+  padding:10px 20px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
+  background:var(--glow);
+  color:#000;
+  box-shadow:0 0 10px var(--glow);
 }
 .card{
-  background:#061b45;
-  padding:10px;margin:8px 0;
+  background:rgba(10,31,68,0.9);
+  padding:12px;
+  margin:8px 0;
   border-radius:8px;
-  display:flex;justify-content:space-between;
-  align-items:center
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  box-shadow:0 0 5px var(--glow);
 }
-.icon-btn{background:none;border:none;color:white;font-size:18px;cursor:pointer}
+.icon-btn{
+  background:none;
+  border:none;
+  color:white;
+  font-size:18px;
+  cursor:pointer;
+  margin-left:5px;
+}
 
-/* ===== PRIVATE PIN ===== */
+/* PRIVATE PIN */
 #pinBox{
-  display:none;position:fixed;
-  inset:0;background:rgba(0,0,0,.8);
-  display:flex;align-items:center;justify-content:center
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.85);
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 </style>
 </head>
@@ -113,8 +159,8 @@ nav button{
 <button onclick="view='blocked';render()">🚫 Blocked</button>
 <button onclick="openPrivate()">🔐 Private</button>
 <button onclick="view='emergency';render()">🚑 Emergency</button>
-<button onclick="showAdd()">➕ Add</button>
-<input id="search" placeholder="Search..." oninput="render()">
+<button onclick="showAdd()">➕ Add Contact</button>
+<input id="search" placeholder="Search..." oninput="render()" style="flex:1;padding:10px;border-radius:8px;border:none;">
 <button onclick="voiceSearch()">🎙️</button>
 </nav>
 
@@ -126,7 +172,7 @@ nav button{
 <h2>Add Contact</h2>
 <input id="fName" placeholder="First Name">
 <input id="sName" placeholder="Surname">
-<input id="number" placeholder="Number">
+<input id="number" placeholder="Phone Number">
 <input id="email" placeholder="Email">
 <input type="date" id="dob">
 <select id="blood">
@@ -134,8 +180,7 @@ nav button{
 <option>B+</option><option>AB+</option>
 </select>
 <select id="group">
-<option>Family</option><option>Friends</option>
-<option>Office</option>
+<option>Family</option><option>Friends</option><option>Office</option>
 </select>
 <label><input type="checkbox" id="fav"> Favorite</label>
 <label><input type="checkbox" id="block"> Block</label>
@@ -159,26 +204,26 @@ let current=null;
 let contacts=[];
 let view="all";
 
-/* ===== BASIC NAV ===== */
+/* NAVIGATION */
 function show(id){
   landing.style.display="none";
   document.querySelectorAll(".form").forEach(f=>f.style.display="none");
   document.getElementById(id).style.display="block";
 }
 
-/* ===== REGISTER ===== */
+/* REGISTER */
 function register(){
   let u=rUser.value;
   if(u.length>50) return alert("Username too long");
-  if(/\s/.test(rPass.value)) return alert("No spaces in password");
-  if(rPass.value!==rCPass.value) return alert("Password mismatch");
+  if(/\s/.test(rPass.value)) return alert("Password cannot have spaces");
+  if(rPass.value!==rCPass.value) return alert("Passwords do not match");
   users[u]={pass:rPass.value,pin:"1234",contacts:[]};
   localStorage.setItem("users",JSON.stringify(users));
-  alert("Registered");
+  alert("Profile Created!");
   show("login");
 }
 
-/* ===== LOGIN ===== */
+/* LOGIN */
 function login(){
   let u=lUser.value;
   if(users[u] && users[u].pass===lPass.value){
@@ -187,10 +232,10 @@ function login(){
     login.style.display="none";
     dashboard.style.display="block";
     render();
-  } else alert("Invalid login");
+  } else alert("Invalid username or password");
 }
 
-/* ===== ADD ===== */
+/* ADD CONTACT */
 function showAdd(){
   dashboard.style.display="none";
   addForm.style.display="block";
@@ -215,7 +260,7 @@ function saveContact(){
   render();
 }
 
-/* ===== RENDER ===== */
+/* RENDER CONTACTS */
 function render(){
   list.innerHTML="";
   let q=search.value?.toLowerCase()||"";
@@ -232,22 +277,22 @@ function render(){
     let d=document.createElement("div");
     d.className="card";
     d.innerHTML=`${c.name}<span>
-    <button class="icon-btn" onclick="alert('Calling ${c.number}')"><i class="fa fa-phone"></i></button>
-    <button class="icon-btn" onclick="alert('QR')"><i class="fa fa-qrcode"></i></button>
+      <button class="icon-btn" onclick="alert('Calling ${c.number}')"><i class="fa fa-phone"></i></button>
+      <button class="icon-btn" onclick="alert('QR Code Generated')"><i class="fa fa-qrcode"></i></button>
     </span>`;
     list.appendChild(d);
   });
 }
 
-/* ===== VOICE SEARCH ===== */
+/* VOICE SEARCH */
 function voiceSearch(){
   let rec=new webkitSpeechRecognition();
-  rec.onresult=e=>{search.value=e.results[0][0].transcript;render()}
+  rec.onresult=e=>{search.value=e.results[0][0].transcript;render();}
   rec.start();
 }
 
-/* ===== PRIVATE ===== */
-function openPrivate(){pinBox.style.display="flex"}
+/* PRIVATE PIN */
+function openPrivate(){pinBox.style.display="flex";}
 function checkPin(){
   if(pin.value===users[current].pin){
     pinBox.style.display="none";
