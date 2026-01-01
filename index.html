@@ -2,108 +2,76 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Contact Hub | Cyberpunk Glow</title>
+<title>Contact Hub – Cyberpunk Glow</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Google Font -->
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
 
 <!-- QR Code Library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <style>
-/* ============ GLOBAL ============ */
 body{
   margin:0;
   font-family:'Orbitron',sans-serif;
-  background:#080016;
+  background:#0c002b;
   color:#fff;
 }
-.neon{
-  text-shadow:0 0 8px #ff00ff,0 0 20px #00ffff;
-}
-button{
-  cursor:pointer;
+.neon{text-shadow:0 0 10px #ff00ff,0 0 20px #00ffff}
+.btn{
+  padding:12px 30px;
   border:none;
-  border-radius:10px;
+  border-radius:12px;
   background:linear-gradient(45deg,#ff00ff,#00ffff);
   color:#fff;
-  padding:10px 15px;
-  box-shadow:0 0 15px #ff00ff;
+  cursor:pointer;
+  box-shadow:0 0 20px #ff00ff;
 }
-button:hover{transform:scale(1.05);}
-
-/* ============ HEADER ============ */
-header{
-  text-align:center;
-  padding:40px;
+.btn:hover{transform:scale(1.1)}
+input,select{
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  background:rgba(255,255,255,0.1);
+  border:1px solid #0ff;
+  border-radius:10px;
+  color:#fff;
 }
-header h1{
-  font-size:3.5em;
-}
-
-/* ============ FORMS ============ */
+header{text-align:center;padding:40px}
 .form{
   width:350px;
-  margin:30px auto;
-  background:rgba(0,0,0,.6);
+  margin:40px auto;
   padding:30px;
+  background:rgba(0,0,0,.6);
   border-radius:20px;
   box-shadow:0 0 30px #ff00ff;
 }
-.form input{
-  width:100%;
-  padding:12px;
-  margin:8px 0;
-  background:#000;
-  border:1px solid #00ffff;
-  border-radius:8px;
-  color:#fff;
-}
-
-/* ============ DASHBOARD ============ */
-.dashboard{
-  display:none;
-  height:100vh;
-}
+.dashboard{display:flex;height:100vh}
 .sidebar{
-  width:230px;
-  background:#050014;
+  width:220px;
   padding:20px;
+  background:rgba(0,0,0,.7);
   box-shadow:0 0 20px #ff00ff;
 }
 .sidebar button{
   width:100%;
-  margin:6px 0;
-  background:transparent;
-  box-shadow:none;
-  text-align:left;
-  color:#00ffff;
+  margin:5px 0;
+  background:none;
+  border:none;
+  color:#0ff;
+  cursor:pointer;
 }
-.sidebar button:hover{color:#ff00ff}
-
-.main{
-  flex:1;
-  padding:20px;
-  overflow:auto;
-}
-
-/* ============ CONTACT CARD ============ */
-.contact{
-  background:#0c0025;
-  margin:10px 0;
+.main{flex:1;padding:20px;overflow:auto}
+.card{
+  background:rgba(0,0,0,.5);
   padding:15px;
   border-radius:15px;
-  box-shadow:0 0 15px #00ffff;
+  margin:10px 0;
   display:flex;
   justify-content:space-between;
-  align-items:center;
+  box-shadow:0 0 15px #0ff;
 }
-.actions button{
-  margin-left:6px;
-}
-
-/* ============ MODALS ============ */
 .modal{
   display:none;
   position:fixed;
@@ -112,28 +80,12 @@ header h1{
   justify-content:center;
   align-items:center;
 }
-.modal-box{
-  background:#06001b;
-  padding:25px;
+.modal-content{
+  background:#000;
+  padding:30px;
   border-radius:20px;
   width:380px;
   box-shadow:0 0 30px #ff00ff;
-}
-.modal-box input,select{
-  width:100%;
-  margin:6px 0;
-  padding:10px;
-  background:#000;
-  border:1px solid #00ffff;
-  color:#fff;
-  border-radius:8px;
-}
-
-/* ============ VIDEO CALL ============ */
-video{
-  width:100%;
-  border-radius:15px;
-  box-shadow:0 0 20px #00ffff;
 }
 </style>
 </head>
@@ -141,209 +93,142 @@ video{
 <body>
 
 <header>
-<h1 class="neon">☢ CONTACT HUB ☢</h1>
-<button onclick="show('login')">🔐 Login</button>
-<button onclick="show('register')">📝 Register</button>
+<h1 class="neon">⚡ Contact Hub ⚡</h1>
+<button class="btn" onclick="show('login')">Login</button>
+<button class="btn" onclick="show('register')">Register</button>
 </header>
 
 <!-- REGISTER -->
 <div id="register" class="form" style="display:none">
-<h2>📝 Register</h2>
-<input id="ruser" placeholder="Username (≤50 chars)" maxlength="50">
-<input id="remail" placeholder="Email">
-<input id="rpass" type="password" placeholder="Password (no spaces)">
-<input id="rconf" type="password" placeholder="Confirm Password">
-<button onclick="register()">Create Account</button>
+<h2>Register</h2>
+<input id="ru" placeholder="Username (max 50)" maxlength="50">
+<input id="re" type="email" placeholder="Email">
+<input id="rp" type="password" placeholder="Password (no spaces)">
+<input id="rcp" type="password" placeholder="Confirm Password">
+<button class="btn" onclick="register()">Create</button>
 </div>
 
 <!-- LOGIN -->
 <div id="login" class="form" style="display:none">
-<h2>🔐 Login</h2>
-<input id="luser" placeholder="Username">
-<input id="lpass" type="password" placeholder="Password">
-<button onclick="login()">Login</button>
+<h2>Login</h2>
+<input id="lu" placeholder="Username">
+<input id="lp" type="password" placeholder="Password">
+<button class="btn" onclick="login()">Login</button>
 </div>
 
 <!-- DASHBOARD -->
-<div id="dash" class="dashboard">
+<div id="dash" class="dashboard" style="display:none">
 <div class="sidebar">
-<button onclick="filterType('all')">📒 All</button>
-<button onclick="filterType('fav')">❤️ Favorites</button>
-<button onclick="filterType('private')">🔐 Private</button>
-<button onclick="filterType('emergency')">🚨 Emergency</button>
-<button onclick="openAdd()">➕ Add Contact</button>
-<button onclick="voiceSearch()">🎙 Voice Search</button>
-<button onclick="logout()">🚪 Logout</button>
+<button onclick="view('all')">📒 All</button>
+<button onclick="view('favorites')">⭐ Favorites</button>
+<button onclick="view('groups')">👥 Groups</button>
+<button onclick="view('private')">🔒 Private</button>
+<button onclick="view('emergency')">🚨 Emergency</button>
+<button onclick="openAdd()">➕ Add</button>
+<button onclick="logout()">⛔ Logout</button>
 </div>
-
 <div class="main">
-<input id="search" placeholder="🔍 Search..." oninput="render()">
+<input id="search" placeholder="Search..." oninput="search()">
+<button class="btn" onclick="voice()">🎙 Voice</button>
 <div id="list"></div>
 </div>
 </div>
 
-<!-- ADD / EDIT CONTACT -->
+<!-- ADD / EDIT -->
 <div id="addModal" class="modal">
-<div class="modal-box">
-<h3>➕ Add / Edit Contact</h3>
-<input id="cname" placeholder="Name">
-<input id="cnum" placeholder="Number">
-<input id="cemail" placeholder="Email">
-<input id="cgroup" placeholder="Group">
-<label><input type="checkbox" id="cfav"> Favorite</label>
-<label><input type="checkbox" id="cpri"> Private</label>
-<label><input type="checkbox" id="cemg"> Emergency</label>
-<button onclick="saveContact()">💾 Save</button>
-<button onclick="closeAdd()">❌ Close</button>
-</div>
-</div>
-
-<!-- PRIVATE PIN -->
-<div id="pinModal" class="modal">
-<div class="modal-box">
-<h3>🔐 Enter PIN</h3>
-<input id="pinInput" type="password" placeholder="4-digit PIN">
-<button onclick="unlockPrivate()">Unlock</button>
-</div>
-</div>
-
-<!-- VIDEO CALL -->
-<div id="videoModal" class="modal">
-<div class="modal-box">
-<h3>🎥 Video Call</h3>
-<video id="video" autoplay></video>
-<button onclick="endCall()">❌ End</button>
+<div class="modal-content">
+<h3>Add / Edit Contact</h3>
+<input id="fn" placeholder="First Name">
+<input id="sn" placeholder="Surname">
+<input id="num" placeholder="Phone">
+<input id="em" placeholder="Email">
+<input type="date" id="dob">
+<select id="bg">
+<option value="">Blood</option><option>O+</option><option>A+</option><option>B+</option>
+</select>
+<input id="grp" placeholder="Group">
+<label><input type="checkbox" id="fav"> Favorite</label>
+<label><input type="checkbox" id="pri"> Private</label>
+<label><input type="checkbox" id="eme"> Emergency</label>
+<button class="btn" onclick="save()">Save</button>
+<button class="btn" onclick="closeAdd()">Cancel</button>
 </div>
 </div>
 
 <!-- QR -->
 <div id="qrModal" class="modal">
-<div class="modal-box">
-<h3>🔳 Contact QR</h3>
+<div class="modal-content">
+<h3>Share Contact</h3>
 <div id="qr"></div>
-<button onclick="closeQR()">Close</button>
+<button class="btn" onclick="closeQR()">Close</button>
 </div>
 </div>
 
 <script>
-/* ===== STORAGE ===== */
 let users=JSON.parse(localStorage.users||"[]");
-let current=null;
-let editIndex=null;
-let showPrivate=false;
+let user=null,contacts=[],edit=null,privateOK=false;
+const PIN="1234";
 
-/* ===== SHOW ===== */
-function show(id){
-  register.style.display=login.style.display='none';
-  if(id) document.getElementById(id).style.display='block';
-}
-
-/* ===== AUTH ===== */
+function show(x){register.style.display=login.style.display='none';document.getElementById(x).style.display='block'}
 function register(){
-  if(rpass.value.includes(" ")) return alert("No spaces allowed");
-  if(rpass.value!==rconf.value) return alert("Password mismatch");
-  users.push({u:ruser.value,p:rpass.value,contacts:[],pin:"1234"});
-  localStorage.users=JSON.stringify(users);
-  alert("Registered");
-  show('login');
+ if(rp.value.includes(" ")) return alert("No spaces");
+ if(rp.value!==rcp.value) return alert("Mismatch");
+ users.push({u:ru.value,p:rp.value,c:[]});
+ localStorage.users=JSON.stringify(users);
+ alert("Registered");
+ show('login');
 }
 function login(){
-  current=users.find(x=>x.u===luser.value && x.p===lpass.value);
-  if(!current) return alert("Invalid login");
-  dash.style.display='flex';
-  login.style.display='none';
-  render();
+ user=users.find(x=>x.u==lu.value&&x.p==lp.value);
+ if(!user) return alert("Invalid");
+ contacts=user.c; dash.style.display='flex'; login.style.display='none'; view('all');
 }
-function logout(){location.reload();}
+function logout(){location.reload()}
+function openAdd(i=null){edit=i;addModal.style.display='flex'}
+function closeAdd(){addModal.style.display='none';edit=null}
 
-/* ===== CONTACTS ===== */
-function openAdd(){
-  addModal.style.display='flex';
-}
-function closeAdd(){addModal.style.display='none'; editIndex=null;}
-function saveContact(){
-  let c={
-    name:cname.value, num:cnum.value, email:cemail.value,
-    group:cgroup.value, fav:cfav.checked,
-    pri:cpri.checked, emg:cemg.checked
-  };
-  editIndex===null?current.contacts.push(c):current.contacts[editIndex]=c;
-  localStorage.users=JSON.stringify(users);
-  closeAdd(); render();
-}
-function render(){
-  list.innerHTML='';
-  let q=search.value.toLowerCase();
-  current.contacts.forEach((c,i)=>{
-    if(c.pri && !showPrivate) return;
-    if(!c.name.toLowerCase().includes(q)) return;
-    let d=document.createElement('div');
-    d.className='contact';
-    d.innerHTML=`
-      <div>${c.pri?'🔐':''} <b>${c.name}</b><br>${c.num}</div>
-      <div class="actions">
-        <button onclick="call('${c.num}')">📞</button>
-        <button onclick="sms('${c.num}')">💬</button>
-        <button onclick="videoCall()">🎥</button>
-        <button onclick="qr('${c.name}','${c.num}')">🔳</button>
-        <button onclick="edit(${i})">✏️</button>
-      </div>`;
-    list.appendChild(d);
-  });
-}
-function edit(i){
-  let c=current.contacts[i];
-  cname.value=c.name;cnum.value=c.num;cemail.value=c.email;
-  cgroup.value=c.group;cfav.checked=c.fav;cpri.checked=c.pri;cemg.checked=c.emg;
-  editIndex=i; openAdd();
+function save(){
+ let c={fn:fn.value,sn:sn.value,n:num.value,e:em.value,d:dob.value,b:bg.value,g:grp.value,f:fav.checked,p:pri.checked,m:eme.checked};
+ edit!==null?contacts[edit]=c:contacts.push(c);
+ user.c=contacts;localStorage.users=JSON.stringify(users);
+ closeAdd();view('all');
 }
 
-/* ===== COMMUNICATION ===== */
-function call(n){location.href=`tel:${n}`;}
-function sms(n){location.href=`sms:${n}`;}
-
-/* ===== VIDEO CALL (WebRTC demo) ===== */
-async function videoCall(){
-  videoModal.style.display='flex';
-  let stream=await navigator.mediaDevices.getUserMedia({video:true,audio:true});
-  video.srcObject=stream;
-}
-function endCall(){
-  let v=video.srcObject;
-  v.getTracks().forEach(t=>t.stop());
-  videoModal.style.display='none';
-}
-
-/* ===== QR ===== */
-function qr(name,num){
-  qrModal.style.display='flex';
-  qr.innerHTML='';
-  new QRCode(qr,{text:`Name:${name},Phone:${num}`,width:200,height:200});
-}
-function closeQR(){qrModal.style.display='none';}
-
-/* ===== PRIVATE PIN ===== */
-function filterType(t){
-  if(t==='private'){ pinModal.style.display='flex'; }
-}
-function unlockPrivate(){
-  if(pinInput.value===current.pin){
-    showPrivate=true;
-    pinModal.style.display='none';
-    render();
-  }else alert("Wrong PIN");
+function view(t){
+ if(t=="private"&&!privateOK){if(prompt("PIN")!=PIN)return;privateOK=true}
+ list.innerHTML='';
+ contacts.filter(c=>
+ t=='all'||(t=='favorites'&&c.f)||(t=='private'&&c.p)||(t=='emergency'&&c.m)||(t=='groups'&&c.g)
+ ).sort((a,b)=>a.fn.localeCompare(b.fn)).forEach((c,i)=>{
+ list.innerHTML+=`
+ <div class="card">
+ <div><b>${c.fn} ${c.sn}</b><br>${c.n}</div>
+ <div>
+ <button onclick="location.href='tel:${c.n}'">📞</button>
+ <button onclick="location.href='sms:${c.n}'">💬</button>
+ <button onclick="qrShow(${i})">🔳</button>
+ <button onclick="openAdd(${i})">✏️</button>
+ </div></div>`});
 }
 
-/* ===== VOICE SEARCH ===== */
-function voiceSearch(){
-  let rec=new webkitSpeechRecognition();
-  rec.onresult=e=>{
-    search.value=e.results[0][0].transcript;
-    render();
-  };
-  rec.start();
+function qrShow(i){
+ qr.innerHTML=''; qrModal.style.display='flex';
+ new QRCode(qr,{text:JSON.stringify(contacts[i]),width:200,height:200});
+}
+function closeQR(){qrModal.style.display='none'}
+
+function search(){
+ let v=search.value.toLowerCase();
+ list.innerHTML='';
+ contacts.filter(c=>c.fn.toLowerCase().includes(v)||c.n.includes(v)).forEach(c=>{
+ list.innerHTML+=`<div class="card">${c.fn} ${c.n}</div>`});
+}
+
+function voice(){
+ let r=new webkitSpeechRecognition();
+ r.onresult=e=>{search.value=e.results[0][0].transcript;search()};
+ r.start();
 }
 </script>
-
 </body>
 </html>
