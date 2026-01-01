@@ -277,6 +277,7 @@ header h1 {
 let users = JSON.parse(localStorage.getItem('users')) || [];
 let currentUser = null;
 let contacts = [];
+let editIndex = null;
 
 function showForm(form){
   document.getElementById('registerForm').style.display=form=='register'?'block':'none';
@@ -330,12 +331,35 @@ function addContact(){
   const emergency=document.getElementById('contactEmergency').checked;
   if(!firstName || !number){alert("First Name and Number required");return;}
   const newContact={firstName,surname,number,email,dob,blood,group,privateC,favorite,emergency};
-  contacts.push(newContact);
+  
+  if(editIndex === null){          // 🔴 ADDED
+    contacts.push(newContact);
+  } else {
+    contacts[editIndex] = newContact;
+    editIndex = null;
+  }
+
+contacts.push(newContact);
   currentUser.contacts=contacts;
   users = users.map(u=>u.username===currentUser.username?currentUser:u);
   localStorage.setItem('users',JSON.stringify(users));
   closeAddContact();
   showContacts('all');
+}
+function editContact(index){       
+  const c = contacts[index];
+  editIndex = index;
+
+  contactFirstName.value = c.firstName;
+  contactSurname.value = c.surname;
+  contactNumber.value = c.number;
+  contactEmail.value = c.email;
+  contactDOB.value = c.dob;
+  contactBlood.value = c.blood;
+  contactGroup.value = c.group;
+  contactPrivate.checked = c.privateC;
+  contactFavorite.checked = c.favorite;
+  contactEmergency.checked = c.emergency;
 }
 
 function showContacts(type){
@@ -370,6 +394,14 @@ function showContacts(type){
   });
 }
 
+function deleteContact(index){     
+  if(confirm("Delete this contact?")){
+    contacts.splice(index,1);
+    currentUser.contacts = contacts;
+    localStorage.setItem('users',JSON.stringify(users));
+    showContacts('all');
+  }
+}
 function searchContacts(){
   const val=document.getElementById('searchInput').value.toLowerCase();
   const list=document.getElementById('contactList');
