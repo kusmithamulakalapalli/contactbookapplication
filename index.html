@@ -332,14 +332,13 @@ function addContact(){
   if(!firstName || !number){alert("First Name and Number required");return;}
   const newContact={firstName,surname,number,email,dob,blood,group,privateC,favorite,emergency};
   
-  if(editIndex === null){          // 🔴 ADDED
+  if(editIndex === null){        
     contacts.push(newContact);
   } else {
     contacts[editIndex] = newContact;
     editIndex = null;
   }
 
-contacts.push(newContact);
   currentUser.contacts=contacts;
   users = users.map(u=>u.username===currentUser.username?currentUser:u);
   localStorage.setItem('users',JSON.stringify(users));
@@ -349,6 +348,8 @@ contacts.push(newContact);
 function editContact(index){       
   const c = contacts[index];
   editIndex = index;
+  showAddContact();
+    const contactFirstName=document.getElementById('contactFirstName');
 
   contactFirstName.value = c.firstName;
   contactSurname.value = c.surname;
@@ -384,12 +385,14 @@ function showContacts(type){
         <span>${c.group||''}</span>
       </div>
       <div class="contact-actions">
-        <button onclick="window.location.href='tel:${c.number}'">📞</button>
-        <button onclick="window.location.href='sms:${c.number}'">💬</button>
-        <button onclick="alert('Starting video call with ${c.number}')">🎥</button>
-        <button onclick="alert('QR Code for ${c.firstName}')">🔳</button>
-      </div>
-    `;
+  <button onclick="editContact(${contacts.indexOf(c)})">✏️</button>
+  <button onclick="deleteContact(${contacts.indexOf(c)})">🗑️</button>
+  <button onclick="window.location.href='tel:${c.number}'">📞</button>
+  <button onclick="window.location.href='sms:${c.number}'">💬</button>
+  <button onclick="alert('Starting video call with ${c.number}')">🎥</button>
+  <button onclick="alert('QR Code for ${c.firstName}')">🔳</button>
+</div>
+ `;
     list.appendChild(card);
   });
 }
