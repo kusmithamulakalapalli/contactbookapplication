@@ -2,56 +2,60 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Contact Hub</title>
+<title>📇 Contact Hub</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI}
-body{background:#06162e;color:#fff}
+body{
+margin:0;
+font-family:Segoe UI, sans-serif;
+background:linear-gradient(135deg,#020b1f,#061d3a);
+color:#fff;
+}
+.hidden{display:none}
+.btn{
+padding:10px 18px;
+border:none;
+border-radius:8px;
+background:#0a84ff;
+color:white;
+cursor:pointer;
+margin:5px;
+}
+.btn:hover{background:#0066cc}
 
 /* ---------- LANDING ---------- */
 .landing{
 height:100vh;
 display:flex;
-align-items:center;
-justify-content:center;
 flex-direction:column;
-background:
-radial-gradient(circle at top,#0a2a5e,#020b1f);
+justify-content:center;
+align-items:center;
 }
 .logo{
-font-size:60px;
+font-size:64px;
 font-weight:bold;
 color:#7fd7ff;
-text-shadow:0 0 30px #00aaff;
+text-shadow:0 0 25px #00aaff;
 }
-.btn{
-margin:10px;
-padding:12px 25px;
-border:none;
-border-radius:8px;
-cursor:pointer;
-font-size:16px;
-background:#0a84ff;
-color:#fff;
+.sub{
+opacity:.8;
+margin-bottom:20px;
 }
-.btn:hover{opacity:0.8}
 
 /* ---------- FORMS ---------- */
-.form-box{
-display:none;
-max-width:400px;
-margin:40px auto;
-background:#0c1f3f;
+.form{
+width:350px;
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(10px);
 padding:25px;
-border-radius:10px;
-box-shadow:0 0 20px #000;
+border-radius:15px;
+box-shadow:0 0 25px #000;
 }
-.form-box h2{text-align:center;margin-bottom:15px}
+.form h2{text-align:center}
 input,select{
 width:100%;
 padding:10px;
@@ -62,7 +66,6 @@ outline:none;
 }
 
 /* ---------- DASHBOARD ---------- */
-#dashboard{display:none}
 .topbar{
 background:#081a33;
 padding:15px;
@@ -71,45 +74,36 @@ justify-content:space-between;
 align-items:center;
 }
 .sidebar{
-width:220px;
+width:230px;
 background:#091f3f;
 position:fixed;
 top:60px;
 bottom:0;
 padding:15px;
+overflow:auto;
 }
-.sidebar button{
-width:100%;
-margin:5px 0;
-}
+.sidebar button{width:100%}
 .main{
-margin-left:240px;
+margin-left:250px;
 padding:20px;
 }
-.contact-card{
-background:#102b55;
-padding:10px;
-border-radius:8px;
-margin:6px 0;
+
+/* ---------- CONTACT CARD ---------- */
+.card{
+background:rgba(255,255,255,0.08);
+padding:12px;
+border-radius:12px;
+margin:8px 0;
 display:flex;
 justify-content:space-between;
 align-items:center;
 }
-.contact-actions a{
-margin:0 5px;
+.actions i{
+margin:0 6px;
+cursor:pointer;
 color:#7fd7ff;
 }
-.hidden{display:none}
-
-/* ---------- PRIVATE PIN ---------- */
-.pin-box{
-max-width:300px;
-margin:40px auto;
-background:#0c1f3f;
-padding:20px;
-border-radius:10px;
-text-align:center;
-}
+.actions i:hover{color:#fff}
 </style>
 </head>
 
@@ -118,191 +112,158 @@ text-align:center;
 <!-- LANDING -->
 <div class="landing" id="landing">
 <div class="logo">📇 Contact Hub</div>
-<button class="btn" onclick="showRegister()">Register</button>
-<button class="btn" onclick="showLogin()">Login</button>
+<div class="sub">Store • Secure • Communicate</div>
+<button class="btn" onclick="openRegister()">✨ Register</button>
+<button class="btn" onclick="openLogin()">🔐 Login</button>
 </div>
 
 <!-- REGISTER -->
-<div class="form-box" id="registerBox">
-<h2>Register</h2>
-<input id="rUser" placeholder="Username (max 50 chars)">
+<div class="landing hidden" id="register">
+<div class="form">
+<h2>✨ Create Profile</h2>
+<input id="rUser" placeholder="Username (≤ 50 chars)">
 <input id="rEmail" type="email" placeholder="Email">
 <input id="rPass" type="password" placeholder="Password (no spaces)">
 <input id="rCPass" type="password" placeholder="Confirm Password">
-<button class="btn" onclick="register()">Create Profile</button>
+<button class="btn" onclick="register()">Create</button>
+</div>
 </div>
 
 <!-- LOGIN -->
-<div class="form-box" id="loginBox">
-<h2>Login</h2>
+<div class="landing hidden" id="login">
+<div class="form">
+<h2>🔐 Login</h2>
 <input id="lUser" placeholder="Username">
 <input id="lPass" type="password" placeholder="Password">
 <button class="btn" onclick="login()">Login</button>
 </div>
+</div>
 
 <!-- DASHBOARD -->
-<div id="dashboard">
+<div id="dash" class="hidden">
 <div class="topbar">
-<h2>Contact Hub</h2>
+<h2>📇 Contact Hub</h2>
 <button class="btn" onclick="logout()">Logout</button>
 </div>
 
 <div class="sidebar">
-<button class="btn" onclick="viewPage('all')">All Contacts</button>
-<button class="btn" onclick="viewPage('add')">Add Contact</button>
-<button class="btn" onclick="viewPage('fav')">Favourites</button>
-<button class="btn" onclick="viewPage('groups')">Groups</button>
-<button class="btn" onclick="viewPage('blocked')">Blocked</button>
-<button class="btn" onclick="openPrivate()">Private</button>
-<button class="btn" onclick="viewPage('emergency')">Emergency</button>
+<button class="btn" onclick="show('all')">📖 All</button>
+<button class="btn" onclick="show('add')">➕ Add</button>
+<button class="btn" onclick="show('fav')">⭐ Favourites</button>
+<button class="btn" onclick="show('groups')">👨‍👩‍👧‍👦 Groups</button>
+<button class="btn" onclick="show('emg')">🚨 Emergency</button>
+<button class="btn" onclick="unlockPrivate()">🔒 Private</button>
 </div>
 
 <div class="main">
+<input id="search" placeholder="🔍 Search..." onkeyup="render()">
 
-<!-- SEARCH -->
-<input id="searchBox" placeholder="Search contacts..." onkeyup="renderContacts()">
-<button class="btn" onclick="voiceSearch()">🎤</button>
-
-<!-- ADD CONTACT -->
 <div id="add" class="hidden">
-<h3>Add Contact</h3>
-<input id="fname" placeholder="First Name">
-<input id="sname" placeholder="Surname">
-<input id="number" placeholder="Phone Number">
-<input id="email" placeholder="Email">
-<input type="date" id="dob">
-<select id="blood">
-<option>O+</option><option>O-</option><option>A+</option><option>B+</option>
-</select>
+<h3>➕ Add Contact</h3>
+<input id="name" placeholder="Full Name">
+<input id="phone" placeholder="Phone">
+<input id="email">
 <select id="group">
 <option>Family</option><option>Friends</option><option>Office</option>
 </select>
-<label><input type="checkbox" id="fav"> Favourite</label>
-<label><input type="checkbox" id="block"> Blocked</label>
-<label><input type="checkbox" id="priv"> Private</label>
-<label><input type="checkbox" id="emg"> Emergency</label>
-<button class="btn" onclick="addContact()">Save</button>
+<label><input type="checkbox" id="fav"> ⭐ Favourite</label>
+<label><input type="checkbox" id="emg"> 🚨 Emergency</label>
+<label><input type="checkbox" id="priv"> 🔒 Private</label>
+<button class="btn" onclick="save()">Save</button>
 </div>
 
-<!-- CONTACT LIST -->
 <div id="all"></div>
 <div id="fav" class="hidden"></div>
 <div id="groups" class="hidden"></div>
-<div id="blocked" class="hidden"></div>
-<div id="emergency" class="hidden"></div>
+<div id="emg" class="hidden"></div>
 
 </div>
-</div>
-
-<!-- PRIVATE PIN -->
-<div class="pin-box hidden" id="pinBox">
-<h3>Enter Private PIN</h3>
-<input id="pinInput" type="password">
-<button class="btn" onclick="unlockPrivate()">Unlock</button>
 </div>
 
 <script>
-let user="", contacts=[], privateUnlocked=false;
+let user="", contacts=[], mode="all", editIndex=null;
 
-function showRegister(){hideAll();registerBox.style.display="block"}
-function showLogin(){hideAll();loginBox.style.display="block"}
-function hideAll(){
-landing.style.display="none";
-registerBox.style.display="none";
-loginBox.style.display="none";
-}
+function openRegister(){landing.classList.add("hidden");register.classList.remove("hidden")}
+function openLogin(){landing.classList.add("hidden");login.classList.remove("hidden")}
 
 function register(){
-let u=rUser.value;
-if(u.length>50)return alert("Username too long");
-if(rPass.value.includes(" "))return alert("Password cannot contain spaces");
-if(rPass.value!==rCPass.value)return alert("Password mismatch");
-localStorage.setItem("user_"+u,JSON.stringify({
-email:rEmail.value,
-pass:rPass.value,
-pin:"1234"
+if(rUser.value.length>50) return alert("Username too long");
+if(rPass.value.includes(" ")) return alert("No spaces allowed");
+if(rPass.value!==rCPass.value) return alert("Password mismatch");
+
+localStorage.setItem("user_"+rUser.value,JSON.stringify({
+email:rEmail.value,pass:rPass.value,pin:"1234"
 }));
-alert("Registered successfully");
-showLogin();
+alert("Registered!");
+openLogin();
 }
 
 function login(){
 let data=JSON.parse(localStorage.getItem("user_"+lUser.value));
-if(!data || data.pass!==lPass.value)return alert("Invalid login");
+if(!data||data.pass!==lPass.value) return alert("Invalid");
 user=lUser.value;
 contacts=JSON.parse(localStorage.getItem("contacts_"+user)||"[]");
-landing.style.display="none";
-loginBox.style.display="none";
-dashboard.style.display="block";
-renderContacts();
+login.classList.add("hidden");
+dash.classList.remove("hidden");
+render();
 }
 
-function logout(){
-location.reload();
-}
+function logout(){location.reload()}
+function show(p){mode=p;render()}
 
-function viewPage(p){
-document.querySelectorAll(".main > div").forEach(d=>d.classList.add("hidden"));
-document.getElementById(p).classList.remove("hidden");
-renderContacts();
-}
-
-function addContact(){
+function save(){
 let c={
-name:fname.value+" "+sname.value,
-number:number.value,
-email:email.value,
+name:name.value,phone:phone.value,email:email.value,
 group:group.value,
-fav:fav.checked,
-block:block.checked,
-priv:priv.checked,
-emg:emg.checked
+fav:fav.checked,emg:emg.checked,priv:priv.checked
 };
-contacts.push(c);
+if(editIndex!==null){contacts[editIndex]=c;editIndex=null}
+else contacts.push(c);
 localStorage.setItem("contacts_"+user,JSON.stringify(contacts));
-alert("Contact added");
-viewPage("all");
+alert("Saved");
+show("all");
 }
 
-function renderContacts(){
-let box=document.getElementById("all");
+function render(){
+["all","fav","groups","emg"].forEach(i=>document.getElementById(i).classList.add("hidden"));
+document.getElementById(mode).classList.remove("hidden");
+
+let box=document.getElementById(mode);
 box.innerHTML="";
-let s=searchBox.value.toLowerCase();
-contacts
+let s=search.value?.toLowerCase()||"";
+
+contacts.filter(c=>{
+if(mode==="fav") return c.fav;
+if(mode==="emg") return c.emg;
+return true;
+}).filter(c=>c.name.toLowerCase().includes(s))
 .sort((a,b)=>a.name.localeCompare(b.name))
-.filter(c=>c.name.toLowerCase().includes(s))
-.forEach(c=>{
-if(c.priv && !privateUnlocked)return;
+.forEach((c,i)=>{
 let d=document.createElement("div");
-d.className="contact-card";
+d.className="card";
 d.innerHTML=`
 <span>${c.name}</span>
-<div class="contact-actions">
-<a href="tel:${c.number}"><i class="fa fa-phone"></i></a>
-<a href="sms:${c.number}"><i class="fa fa-comment"></i></a>
-<a href="https://wa.me/${c.number}" target="_blank"><i class="fa fa-video"></i></a>
+<div class="actions">
+<i class="fa fa-phone" onclick="location.href='tel:${c.phone}'"></i>
+<i class="fa fa-pen" onclick="edit(${i})"></i>
 </div>`;
 box.appendChild(d);
 });
 }
 
-function voiceSearch(){
-let rec=new(window.SpeechRecognition||window.webkitSpeechRecognition)();
-rec.onresult=e=>{searchBox.value=e.results[0][0].transcript;renderContacts()}
-rec.start();
-}
-
-function openPrivate(){
-pinBox.classList.remove("hidden");
+function edit(i){
+let c=contacts[i];
+name.value=c.name;phone.value=c.phone;email.value=c.email;
+group.value=c.group;fav.checked=c.fav;emg.checked=c.emg;priv.checked=c.priv;
+editIndex=i;show("add");
 }
 
 function unlockPrivate(){
-if(pinInput.value==="1234"){
-privateUnlocked=true;
-pinBox.classList.add("hidden");
-viewPage("all");
-}else alert("Wrong PIN");
+let p=prompt("Enter Private PIN");
+if(p==="1234"){mode="all";render()}
+else alert("Wrong PIN");
 }
 </script>
+
 </body>
 </html>
