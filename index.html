@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Contact Hub</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI}
+body{background:#06162e;color:#fff}
+
+/* ---------- LANDING ---------- */
+.landing{
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+background:
+radial-gradient(circle at top,#0a2a5e,#020b1f);
+}
+.logo{
+font-size:60px;
+font-weight:bold;
+color:#7fd7ff;
+text-shadow:0 0 30px #00aaff;
+}
+.btn{
+margin:10px;
+padding:12px 25px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-size:16px;
+background:#0a84ff;
+color:#fff;
+}
+.btn:hover{opacity:0.8}
+
+/* ---------- FORMS ---------- */
+.form-box{
+display:none;
+max-width:400px;
+margin:40px auto;
+background:#0c1f3f;
+padding:25px;
+border-radius:10px;
+box-shadow:0 0 20px #000;
+}
+.form-box h2{text-align:center;margin-bottom:15px}
+input,select{
+width:100%;
+padding:10px;
+margin:8px 0;
+border-radius:6px;
+border:none;
+outline:none;
+}
+
+/* ---------- DASHBOARD ---------- */
+#dashboard{display:none}
+.topbar{
+background:#081a33;
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+.sidebar{
+width:220px;
+background:#091f3f;
+position:fixed;
+top:60px;
+bottom:0;
+padding:15px;
+}
+.sidebar button{
+width:100%;
+margin:5px 0;
+}
+.main{
+margin-left:240px;
+padding:20px;
+}
+.contact-card{
+background:#102b55;
+padding:10px;
+border-radius:8px;
+margin:6px 0;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+.contact-actions a{
+margin:0 5px;
+color:#7fd7ff;
+}
+.hidden{display:none}
+
+/* ---------- PRIVATE PIN ---------- */
+.pin-box{
+max-width:300px;
+margin:40px auto;
+background:#0c1f3f;
+padding:20px;
+border-radius:10px;
+text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LANDING -->
+<div class="landing" id="landing">
+<div class="logo">📇 Contact Hub</div>
+<button class="btn" onclick="showRegister()">Register</button>
+<button class="btn" onclick="showLogin()">Login</button>
+</div>
+
+<!-- REGISTER -->
+<div class="form-box" id="registerBox">
+<h2>Register</h2>
+<input id="rUser" placeholder="Username (max 50 chars)">
+<input id="rEmail" type="email" placeholder="Email">
+<input id="rPass" type="password" placeholder="Password (no spaces)">
+<input id="rCPass" type="password" placeholder="Confirm Password">
+<button class="btn" onclick="register()">Create Profile</button>
+</div>
+
+<!-- LOGIN -->
+<div class="form-box" id="loginBox">
+<h2>Login</h2>
+<input id="lUser" placeholder="Username">
+<input id="lPass" type="password" placeholder="Password">
+<button class="btn" onclick="login()">Login</button>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+<div class="topbar">
+<h2>Contact Hub</h2>
+<button class="btn" onclick="logout()">Logout</button>
+</div>
+
+<div class="sidebar">
+<button class="btn" onclick="viewPage('all')">All Contacts</button>
+<button class="btn" onclick="viewPage('add')">Add Contact</button>
+<button class="btn" onclick="viewPage('fav')">Favourites</button>
+<button class="btn" onclick="viewPage('groups')">Groups</button>
+<button class="btn" onclick="viewPage('blocked')">Blocked</button>
+<button class="btn" onclick="openPrivate()">Private</button>
+<button class="btn" onclick="viewPage('emergency')">Emergency</button>
+</div>
+
+<div class="main">
+
+<!-- SEARCH -->
+<input id="searchBox" placeholder="Search contacts..." onkeyup="renderContacts()">
+<button class="btn" onclick="voiceSearch()">🎤</button>
+
+<!-- ADD CONTACT -->
+<div id="add" class="hidden">
+<h3>Add Contact</h3>
+<input id="fname" placeholder="First Name">
+<input id="sname" placeholder="Surname">
+<input id="number" placeholder="Phone Number">
+<input id="email" placeholder="Email">
+<input type="date" id="dob">
+<select id="blood">
+<option>O+</option><option>O-</option><option>A+</option><option>B+</option>
+</select>
+<select id="group">
+<option>Family</option><option>Friends</option><option>Office</option>
+</select>
+<label><input type="checkbox" id="fav"> Favourite</label>
+<label><input type="checkbox" id="block"> Blocked</label>
+<label><input type="checkbox" id="priv"> Private</label>
+<label><input type="checkbox" id="emg"> Emergency</label>
+<button class="btn" onclick="addContact()">Save</button>
+</div>
+
+<!-- CONTACT LIST -->
+<div id="all"></div>
+<div id="fav" class="hidden"></div>
+<div id="groups" class="hidden"></div>
+<div id="blocked" class="hidden"></div>
+<div id="emergency" class="hidden"></div>
+
+</div>
+</div>
+
+<!-- PRIVATE PIN -->
+<div class="pin-box hidden" id="pinBox">
+<h3>Enter Private PIN</h3>
+<input id="pinInput" type="password">
+<button class="btn" onclick="unlockPrivate()">Unlock</button>
+</div>
+
+<script>
+let user="", contacts=[], privateUnlocked=false;
+
+function showRegister(){hideAll();registerBox.style.display="block"}
+function showLogin(){hideAll();loginBox.style.display="block"}
+function hideAll(){
+landing.style.display="none";
+registerBox.style.display="none";
+loginBox.style.display="none";
+}
+
+function register(){
+let u=rUser.value;
+if(u.length>50)return alert("Username too long");
+if(rPass.value.includes(" "))return alert("Password cannot contain spaces");
+if(rPass.value!==rCPass.value)return alert("Password mismatch");
+localStorage.setItem("user_"+u,JSON.stringify({
+email:rEmail.value,
+pass:rPass.value,
+pin:"1234"
+}));
+alert("Registered successfully");
+showLogin();
+}
+
+function login(){
+let data=JSON.parse(localStorage.getItem("user_"+lUser.value));
+if(!data || data.pass!==lPass.value)return alert("Invalid login");
+user=lUser.value;
+contacts=JSON.parse(localStorage.getItem("contacts_"+user)||"[]");
+landing.style.display="none";
+loginBox.style.display="none";
+dashboard.style.display="block";
+renderContacts();
+}
+
+function logout(){
+location.reload();
+}
+
+function viewPage(p){
+document.querySelectorAll(".main > div").forEach(d=>d.classList.add("hidden"));
+document.getElementById(p).classList.remove("hidden");
+renderContacts();
+}
+
+function addContact(){
+let c={
+name:fname.value+" "+sname.value,
+number:number.value,
+email:email.value,
+group:group.value,
+fav:fav.checked,
+block:block.checked,
+priv:priv.checked,
+emg:emg.checked
+};
+contacts.push(c);
+localStorage.setItem("contacts_"+user,JSON.stringify(contacts));
+alert("Contact added");
+viewPage("all");
+}
+
+function renderContacts(){
+let box=document.getElementById("all");
+box.innerHTML="";
+let s=searchBox.value.toLowerCase();
+contacts
+.sort((a,b)=>a.name.localeCompare(b.name))
+.filter(c=>c.name.toLowerCase().includes(s))
+.forEach(c=>{
+if(c.priv && !privateUnlocked)return;
+let d=document.createElement("div");
+d.className="contact-card";
+d.innerHTML=`
+<span>${c.name}</span>
+<div class="contact-actions">
+<a href="tel:${c.number}"><i class="fa fa-phone"></i></a>
+<a href="sms:${c.number}"><i class="fa fa-comment"></i></a>
+<a href="https://wa.me/${c.number}" target="_blank"><i class="fa fa-video"></i></a>
+</div>`;
+box.appendChild(d);
+});
+}
+
+function voiceSearch(){
+let rec=new(window.SpeechRecognition||window.webkitSpeechRecognition)();
+rec.onresult=e=>{searchBox.value=e.results[0][0].transcript;renderContacts()}
+rec.start();
+}
+
+function openPrivate(){
+pinBox.classList.remove("hidden");
+}
+
+function unlockPrivate(){
+if(pinInput.value==="1234"){
+privateUnlocked=true;
+pinBox.classList.add("hidden");
+viewPage("all");
+}else alert("Wrong PIN");
+}
+</script>
+</body>
+</html>
